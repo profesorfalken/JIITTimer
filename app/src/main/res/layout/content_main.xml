@@ -63,6 +63,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/workTimeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -94,6 +95,7 @@
         android:layout_marginEnd="148dp"
         android:layout_marginStart="148dp"
         android:layout_marginTop="75dp"
+        android:onClick="clickGoButton"
         android:text="GO!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

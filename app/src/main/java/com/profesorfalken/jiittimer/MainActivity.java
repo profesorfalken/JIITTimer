@@ -1,17 +1,25 @@
 package com.profesorfalken.jiittimer;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.profesorfalken.jiittimer.util.JiitTimeUtils;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +32,22 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.default_hiit_programs, android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
+    }
+
+    public void clickGoButton(View view) {
+        final TextView workTimeTextView = findViewById(R.id.workTimeTextView);
+
+        new CountDownTimer(5000, 500) {
+            public void onTick(long millisUntilFinished) {
+                Log.i(TAG, "ontick: " +  millisUntilFinished);
+                workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(millisUntilFinished));
+            }
+
+            public void onFinish() {
+                workTimeTextView.setText("00:00");
+                Toast.makeText(getApplicationContext(), "Finished!!!", Toast.LENGTH_LONG).show();
+            }
+        }.start();
     }
 
     @Override
