@@ -76,6 +76,7 @@
                 android:layout_width="4dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:onClick="clickOnIncreaseWorkTime"
                 android:text="+" />
 
             <Button

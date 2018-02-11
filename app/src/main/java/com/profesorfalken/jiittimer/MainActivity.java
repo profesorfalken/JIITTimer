@@ -21,6 +21,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    private static final long COUNTDOWN_INTERVAL = 500;
+
+    private static final long BASE_TIME = 1000;
+
+    private long workTime = 30000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,12 +38,15 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.default_hiit_programs, android.R.layout.simple_spinner_item);
         spinner.setAdapter(adapter);
+
+        TextView workTimeTextView = findViewById(R.id.workTimeTextView);
+        workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.workTime));
     }
 
     public void clickGoButton(View view) {
         final TextView workTimeTextView = findViewById(R.id.workTimeTextView);
 
-        new CountDownTimer(5000, 500) {
+        new CountDownTimer(this.workTime, COUNTDOWN_INTERVAL) {
             public void onTick(long millisUntilFinished) {
                 Log.i(TAG, "ontick: " +  millisUntilFinished);
                 workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(millisUntilFinished));
@@ -48,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Finished!!!", Toast.LENGTH_LONG).show();
             }
         }.start();
+    }
+
+    public void clickOnIncreaseWorkTime(View view) {
+        this.workTime += BASE_TIME;
+        TextView workTimeTextView = findViewById(R.id.workTimeTextView);
+        workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.workTime));
     }
 
     @Override
