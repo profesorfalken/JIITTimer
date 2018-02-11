@@ -53,7 +53,7 @@
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="wrap_content"
+                android:layout_width="15dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="?attr/colorButtonNormal"
@@ -64,7 +64,7 @@
 
             <TextView
                 android:id="@+id/workTimeTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="5dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -93,7 +93,7 @@
 
             <TextView
                 android:id="@+id/textView3"
-                android:layout_width="wrap_content"
+                android:layout_width="15dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="?attr/colorButtonNormal"
@@ -104,7 +104,7 @@
 
             <TextView
                 android:id="@+id/restTimeTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="5dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
@@ -132,7 +132,7 @@
 
             <TextView
                 android:id="@+id/textView4"
-                android:layout_width="wrap_content"
+                android:layout_width="15dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="?attr/colorButtonNormal"
