@@ -17,15 +17,22 @@ import android.widget.Toast;
 
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private static final long COUNTDOWN_INTERVAL = 500;
-
     private static final long BASE_TIME = 1000;
 
-    private long workTime = 30000;
+    private WorkoutTask[] programmedTimers;
+
+    private long workTime = 5000;
+
+    private long restTime = 10000;
+
+    private int cycles = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,22 +48,38 @@ public class MainActivity extends AppCompatActivity {
 
         TextView workTimeTextView = findViewById(R.id.workTimeTextView);
         workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.workTime));
+
+        TextView restTimeTextView = findViewById(R.id.restTimeTextView);
+        restTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.restTime));
+
+        TextView cyclesTextView = findViewById(R.id.cyclesTextView);
+        cyclesTextView.setText(String.format("%d", cycles));
     }
 
     public void clickGoButton(View view) {
         final TextView workTimeTextView = findViewById(R.id.workTimeTextView);
+        final TextView restTimeTextView = findViewById(R.id.restTimeTextView);
 
-        new CountDownTimer(this.workTime, COUNTDOWN_INTERVAL) {
-            public void onTick(long millisUntilFinished) {
-                Log.i(TAG, "ontick: " +  millisUntilFinished);
-                workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(millisUntilFinished));
-            }
+        int cyclesToProgram = this.cycles;
+        if (this.restTime >= 1000) {
+            cyclesToProgram *= 2;
+        }
 
-            public void onFinish() {
-                workTimeTextView.setText("00:00");
-                Toast.makeText(getApplicationContext(), "Finished!!!", Toast.LENGTH_LONG).show();
+        this.programmedTimers = new WorkoutTask[cyclesToProgram];
+
+        //Program timers
+        int i = cyclesToProgram -1;
+        WorkoutTask next = null;
+        while (i >= 0) {
+            if (this.restTime >= 1000) {
+                this.programmedTimers[i] = new WorkoutTask(this.restTime, restTimeTextView, next);
+                next = this.programmedTimers[i--];
             }
-        }.start();
+            this.programmedTimers[i] = new WorkoutTask(this.workTime, workTimeTextView, next);
+            next = this.programmedTimers[i--];
+        }
+
+        this.programmedTimers[0].start();
     }
 
     public void clickOnIncreaseWorkTime(View view) {
