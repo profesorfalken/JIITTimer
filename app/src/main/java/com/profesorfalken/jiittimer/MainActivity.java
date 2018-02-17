@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements WorkoutDialogFrag
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+/*
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.default_hiit_programs, android.R.layout.simple_spinner_item);
@@ -55,13 +55,13 @@ public class MainActivity extends AppCompatActivity implements WorkoutDialogFrag
         restTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.restTime));
 
         TextView cyclesTextView = findViewById(R.id.cyclesTextView);
-        cyclesTextView.setText(String.format("%d", cycles));
+        cyclesTextView.setText(String.format("%d", cycles));*/
     }
 
     public void clickGoButton(View view) {
 
         showWorkoutDialog();
-        final TextView workTimeTextView = findViewById(R.id.workTimeTextView);
+      /*  final TextView workTimeTextView = findViewById(R.id.workTimeTextView);
         final TextView restTimeTextView = findViewById(R.id.restTimeTextView);
 
         int cyclesToProgram = this.cycles;
@@ -83,13 +83,13 @@ public class MainActivity extends AppCompatActivity implements WorkoutDialogFrag
             next = this.programmedTimers[i--];
         }
 
-        this.programmedTimers[0].start();
+        this.programmedTimers[0].start();*/
     }
 
     public void clickOnIncreaseWorkTime(View view) {
-        this.workTime += BASE_TIME;
+      /*  this.workTime += BASE_TIME;
         TextView workTimeTextView = findViewById(R.id.workTimeTextView);
-        workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.workTime));
+        workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.workTime));*/
     }
 
     @Override
