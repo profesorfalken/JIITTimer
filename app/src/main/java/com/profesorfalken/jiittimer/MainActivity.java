@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         fillDefaultPrograms();
         refreshTotals();
 
+        initEvents();
 
 /*
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -64,6 +67,35 @@ public class MainActivity extends AppCompatActivity {
 
         TextView cyclesTextView = findViewById(R.id.cyclesTextView);
         cyclesTextView.setText(String.format("%d", cycles));*/
+    }
+
+    private void initEvents() {
+        TextWatcher timerWatchers =  new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                refreshTotals();
+            }
+        };
+
+        EditText workTimeEditText = findViewById(R.id.workTimeEditText);
+        EditText restTimeEditText = findViewById(R.id.restTimeEditText);
+        EditText cyclesEditText = findViewById(R.id.cyclesEditText);
+        EditText coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
+
+        workTimeEditText.addTextChangedListener(timerWatchers);
+        restTimeEditText.addTextChangedListener(timerWatchers);
+        cyclesEditText.addTextChangedListener(timerWatchers);
+        coolDownTimeEditText.addTextChangedListener(timerWatchers);
     }
 
     private void fillDefaultPrograms() {
@@ -94,9 +126,11 @@ public class MainActivity extends AppCompatActivity {
         TextView sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
         TextView cycleCountTextView = findViewById(R.id.cycleCountTextView);
 
+        int cycles = cyclesEditText.getText().toString().length() > 0 ? Integer.valueOf(cyclesEditText.getText().toString()) : 0;
+
         int totalTimeInSeconds = (JiitTimeUtils.FormattedTimeToSeconds(workTimeEditText.getText().toString()) +
                 JiitTimeUtils.FormattedTimeToSeconds(restTimeEditText.getText().toString()))
-                * Integer.valueOf(cyclesEditText.getText().toString()) + JiitTimeUtils.FormattedTimeToSeconds(coolDownTimeEditText.getText().toString());
+                * cycles + JiitTimeUtils.FormattedTimeToSeconds(coolDownTimeEditText.getText().toString());
 
         sessionTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(totalTimeInSeconds * 1000));
         cycleCountTextView.setText(String.format("%s/%s", "0" , cyclesEditText.getText().toString()));
