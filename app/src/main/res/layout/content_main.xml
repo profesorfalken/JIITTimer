@@ -74,7 +74,8 @@
                                 android:layout_height="wrap_content"
                                 android:ems="10"
                                 android:gravity="center"
-                                android:inputType="textPersonName"
+                                android:digits="0123456789:"
+                                android:inputType="number"
                                 android:text="00:00" />
 
                             <Button
@@ -115,7 +116,7 @@
                                 android:layout_height="wrap_content"
                                 android:ems="10"
                                 android:gravity="center"
-                                android:inputType="textPersonName"
+                                android:inputType="numberDecimal"
                                 android:text="00:00" />
 
                             <Button
@@ -170,7 +171,7 @@
                                 android:layout_height="wrap_content"
                                 android:ems="10"
                                 android:gravity="center"
-                                android:inputType="textPersonName"
+                                android:inputType="number"
                                 android:text="0" />
 
                             <Button
@@ -211,7 +212,8 @@
                                 android:layout_height="wrap_content"
                                 android:ems="10"
                                 android:gravity="center"
-                                android:inputType="textPersonName"
+                                android:digits="0123456789:"
+                                android:inputType="number"
                                 android:text="00:00" />
 
                             <Button
@@ -278,7 +280,7 @@
                     android:id="@+id/textView5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="120"
+                    android:text="READY"
                     android:textSize="96dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"

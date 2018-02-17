@@ -70,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initEvents() {
-        TextWatcher timerWatchers =  new TextWatcher() {
+        TextWatcher timerWatchers = new TextWatcher() {
+            private int lastPosition;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -78,24 +80,71 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                this.lastPosition = start;
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                String text = s.toString();
+
+                int indexOfSeparator = text.indexOf(":");
+                if (indexOfSeparator == -1) {
+                    s.insert(this.lastPosition, ":");
+                }
+
+                String[] timeData = text.split(":");
+
+                if (timeData.length == 1 && indexOfSeparator == 0) {
+                    if (timeData[0].length() > 2) {
+                        s.delete(s.length() -1, s.length());
+                    }
+                } else if (timeData.length == 2) {
+                    if (timeData[1].length() > 2) {
+                        s.delete(s.length() -1, s.length());
+                    }
+                }
+
+                if (indexOfSeparator != 0) {
+                    if (timeData[0].length() > 2) {
+                        s.delete(0, 1);
+                    }
+                }
+
+
+                    /* else if (indexOfSeparator == 0) {
+                    s.insert(0, "00");
+                } else if (indexOfSeparator == text.length() - 1) {
+                    s.append("00");
+                }*/
+
                 refreshTotals();
+            }
+        };
+
+        View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    EditText editText = (EditText) v;
+                    editText.setText(JiitTimeUtils.millisToFormattedTime(
+                            JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000));
+                }
             }
         };
 
         EditText workTimeEditText = findViewById(R.id.workTimeEditText);
         EditText restTimeEditText = findViewById(R.id.restTimeEditText);
-        EditText cyclesEditText = findViewById(R.id.cyclesEditText);
+        //EditText cyclesEditText = findViewById(R.id.cyclesEditText);
         EditText coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
 
         workTimeEditText.addTextChangedListener(timerWatchers);
         restTimeEditText.addTextChangedListener(timerWatchers);
-        cyclesEditText.addTextChangedListener(timerWatchers);
+        //cyclesEditText.addTextChangedListener(timerWatchers);
         coolDownTimeEditText.addTextChangedListener(timerWatchers);
+
+        workTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
+        restTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
+        coolDownTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
     }
 
     private void fillDefaultPrograms() {
@@ -133,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                 * cycles + JiitTimeUtils.FormattedTimeToSeconds(coolDownTimeEditText.getText().toString());
 
         sessionTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(totalTimeInSeconds * 1000));
-        cycleCountTextView.setText(String.format("%s/%s", "0" , cyclesEditText.getText().toString()));
+        cycleCountTextView.setText(String.format("%s/%s", "0", cyclesEditText.getText().toString()));
     }
 
     public void clickGoButton(View view) {
