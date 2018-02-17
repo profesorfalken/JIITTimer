@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,13 @@ public class MainActivity extends AppCompatActivity implements WorkoutDialogFrag
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //TODO: replace by configuration
+        setInitTimeValues();
+        fillDefaultPrograms();
+        refreshTotals();
+
+
 /*
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -56,6 +64,42 @@ public class MainActivity extends AppCompatActivity implements WorkoutDialogFrag
 
         TextView cyclesTextView = findViewById(R.id.cyclesTextView);
         cyclesTextView.setText(String.format("%d", cycles));*/
+    }
+
+    private void fillDefaultPrograms() {
+        Spinner programListSpinner = (Spinner) findViewById(R.id.programListSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.default_hiit_programs, android.R.layout.simple_spinner_dropdown_item);
+        programListSpinner.setAdapter(adapter);
+    }
+
+    private void setInitTimeValues() {
+        EditText workTimeEditText = findViewById(R.id.workTimeEditText);
+        EditText restTimeEditText = findViewById(R.id.restTimeEditText);
+        EditText cyclesEditText = findViewById(R.id.cyclesEditText);
+        EditText coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
+
+        workTimeEditText.setText("00:30");
+        restTimeEditText.setText("00:10");
+        cyclesEditText.setText("3");
+        coolDownTimeEditText.setText("01:00");
+    }
+
+    private void refreshTotals() {
+        EditText workTimeEditText = findViewById(R.id.workTimeEditText);
+        EditText restTimeEditText = findViewById(R.id.restTimeEditText);
+        EditText cyclesEditText = findViewById(R.id.cyclesEditText);
+        EditText coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
+
+        TextView sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
+        TextView cycleCountTextView = findViewById(R.id.cycleCountTextView);
+
+        int totalTimeInSeconds = (JiitTimeUtils.FormattedTimeToSeconds(workTimeEditText.getText().toString()) +
+                JiitTimeUtils.FormattedTimeToSeconds(restTimeEditText.getText().toString()))
+                * Integer.valueOf(cyclesEditText.getText().toString()) + JiitTimeUtils.FormattedTimeToSeconds(coolDownTimeEditText.getText().toString());
+
+        sessionTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(totalTimeInSeconds * 1000));
+        cycleCountTextView.setText(String.format("%s/%s", "0" , cyclesEditText.getText().toString()));
     }
 
     public void clickGoButton(View view) {

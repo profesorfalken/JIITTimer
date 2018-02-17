@@ -21,4 +21,12 @@ public class JiitTimeUtils {
 
         return formatted;
     }
+
+    public static int FormattedTimeToSeconds(String formattedTime) {
+        String[] units = formattedTime.split(":");
+        int minutes = Integer.parseInt(units[0]);
+        int seconds = Integer.parseInt(units[1]);
+
+        return 60 * minutes + seconds;
+    }
 }
