@@ -23,7 +23,7 @@ import com.profesorfalken.jiittimer.util.JiitTimeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements WorkoutDialogFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -103,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements WorkoutDialogFrag
     }
 
     public void clickGoButton(View view) {
-
-        showWorkoutDialog();
       /*  final TextView workTimeTextView = findViewById(R.id.workTimeTextView);
         final TextView restTimeTextView = findViewById(R.id.restTimeTextView);
 
@@ -156,16 +154,5 @@ public class MainActivity extends AppCompatActivity implements WorkoutDialogFrag
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showWorkoutDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        WorkoutDialogFragment workoutDialog = WorkoutDialogFragment.newInstance("fds", "fdsfds");
-        workoutDialog.show(fm, "fragment_workout");
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }
