@@ -40,7 +40,8 @@
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_green_dark">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -128,8 +129,88 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/colorPrimary">
+                    android:background="@android:color/darker_gray">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/cyclesTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Cycles:" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/cyclesEditText"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:inputType="textPersonName"
+                                android:text="00:00" />
+
+                            <Button
+                                android:id="@+id/cyclesPlus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="+" />
+
+                            <Button
+                                android:id="@+id/cyclesLess"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="-" />
+
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/cooldowntextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Cooldown:" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/coolDownTimeEditText"
+                                android:layout_width="80dp"
+                                android:layout_height="wrap_content"
+                                android:ems="10"
+                                android:inputType="textPersonName"
+                                android:text="00:00" />
+
+                            <Button
+                                android:id="@+id/cooldownPlus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="+" />
+
+                            <Button
+                                android:id="@+id/cooldownLess"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="-" />
+
+                        </LinearLayout>
+                    </LinearLayout>
                 </android.support.constraint.ConstraintLayout>
             </LinearLayout>
 
@@ -139,12 +220,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/holo_green_dark"
             android:orientation="vertical">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@drawable/border">
 
                 <TextView
                     android:id="@+id/textView5"
@@ -156,15 +237,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-                <EditText
-                    android:id="@+id/editText3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="number"
-                    tools:layout_editor_absoluteX="57dp"
-                    tools:layout_editor_absoluteY="195dp" />
 
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
