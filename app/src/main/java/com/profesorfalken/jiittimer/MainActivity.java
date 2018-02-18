@@ -3,6 +3,7 @@ package com.profesorfalken.jiittimer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -11,10 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +41,41 @@ public class MainActivity extends AppCompatActivity {
     private long restTime = 10000;
 
     private int cycles = 5;
+
+    private Handler repeatUpdateHandler = new Handler();
+
+    private boolean autoIncrement = false;
+    private boolean autoDecrement = false;
+
+    private static int REP_DELAY = 50;
+
+    class RptUpdater implements Runnable {
+
+        private EditText editText = null;
+
+        public void setEditText (EditText editText) {
+            this.editText = editText;
+        }
+
+        public void run() {
+            if( autoIncrement ){
+                increment(this.editText);
+                repeatUpdateHandler.postDelayed( this, REP_DELAY );
+            } else if( autoDecrement ){
+                decrement(this.editText);
+                repeatUpdateHandler.postDelayed( this, REP_DELAY );
+            }
+        }
+    }
+
+    public void decrement(EditText editText){
+        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000) );
+    }
+    public void increment(EditText editText){
+        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 + 1000) );
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +170,35 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        View.OnLongClickListener longClickListener =
+                new View.OnLongClickListener(){
+
+                    public boolean onLongClick(View arg0) {
+                        autoIncrement = true;
+                        RptUpdater updater = new RptUpdater();
+                        updater.setEditText((EditText) arg0.getTag());
+                        repeatUpdateHandler.post( updater );
+                        return false;
+                    }
+                };
+
+
+
+
+        View.OnTouchListener longTouchListener = new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if ((event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
+                        && autoIncrement) {
+                    autoIncrement = false;
+                }
+                return false;
+            }
+        };
+
+
+
+
+
         EditText workTimeEditText = findViewById(R.id.workTimeEditText);
         EditText restTimeEditText = findViewById(R.id.restTimeEditText);
         //EditText cyclesEditText = findViewById(R.id.cyclesEditText);
@@ -145,6 +212,11 @@ public class MainActivity extends AppCompatActivity {
         workTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
         restTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
         coolDownTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
+
+        Button workOutIncreaseButton = findViewById(R.id.workPlus);
+        workOutIncreaseButton.setTag(workTimeEditText);
+        workOutIncreaseButton.setOnLongClickListener(longClickListener);
+        workOutIncreaseButton.setOnTouchListener(longTouchListener);
     }
 
     private void fillDefaultPrograms() {
@@ -211,10 +283,9 @@ public class MainActivity extends AppCompatActivity {
         this.programmedTimers[0].start();*/
     }
 
-    public void clickOnIncreaseWorkTime(View view) {
-      /*  this.workTime += BASE_TIME;
-        TextView workTimeTextView = findViewById(R.id.workTimeTextView);
-        workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.workTime));*/
+    public void increaseWorkTime(View view) {
+        TextView workTimeTextView = findViewById(R.id.workTimeEditText);
+        workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(workTimeTextView.getText().toString()) * 1000 + 1000));
     }
 
     @Override
