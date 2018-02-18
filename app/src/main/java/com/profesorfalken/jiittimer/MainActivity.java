@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        View.OnLongClickListener longClickListener =
+        View.OnLongClickListener longClickIncreaseValueListener =
                 new View.OnLongClickListener(){
 
                     public boolean onLongClick(View arg0) {
@@ -185,11 +185,36 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        View.OnTouchListener longTouchListener = new View.OnTouchListener() {
+        View.OnTouchListener longTouchIncreaseValueListener = new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 if ((event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
                         && autoIncrement) {
                     autoIncrement = false;
+                }
+                return false;
+            }
+        };
+
+        View.OnLongClickListener longClickDecreaseValueListener =
+                new View.OnLongClickListener(){
+
+                    public boolean onLongClick(View arg0) {
+                        autoDecrement = true;
+                        RptUpdater updater = new RptUpdater();
+                        updater.setEditText((EditText) arg0.getTag());
+                        repeatUpdateHandler.post( updater );
+                        return false;
+                    }
+                };
+
+
+
+
+        View.OnTouchListener longTouchDecreaseValueListener = new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if ((event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
+                        && autoDecrement) {
+                    autoDecrement = false;
                 }
                 return false;
             }
@@ -213,10 +238,35 @@ public class MainActivity extends AppCompatActivity {
         restTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
         coolDownTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
 
-        Button workOutIncreaseButton = findViewById(R.id.workPlus);
-        workOutIncreaseButton.setTag(workTimeEditText);
-        workOutIncreaseButton.setOnLongClickListener(longClickListener);
-        workOutIncreaseButton.setOnTouchListener(longTouchListener);
+        Button workOutIncreaseTimeButton = findViewById(R.id.workPlus);
+        workOutIncreaseTimeButton.setTag(workTimeEditText);
+        workOutIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
+        workOutIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+
+        Button workOutDecreaseTimeButton = findViewById(R.id.workLess);
+        workOutDecreaseTimeButton.setTag(workTimeEditText);
+        workOutDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
+        workOutDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
+
+        Button restIncreaseTimeButton = findViewById(R.id.restPlus);
+        restIncreaseTimeButton.setTag(restTimeEditText);
+        restIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
+        restIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+
+        Button restDecreaseTimeButton = findViewById(R.id.restLess);
+        restDecreaseTimeButton.setTag(restTimeEditText);
+        restDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
+        restDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
+
+        Button cooldownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
+        cooldownIncreaseTimeButton.setTag(coolDownTimeEditText);
+        cooldownIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
+        cooldownIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+
+        Button cooldownDecreaseTimeButton = findViewById(R.id.cooldownLess);
+        cooldownDecreaseTimeButton.setTag(coolDownTimeEditText);
+        cooldownDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
+        cooldownDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
     }
 
     private void fillDefaultPrograms() {
@@ -283,9 +333,14 @@ public class MainActivity extends AppCompatActivity {
         this.programmedTimers[0].start();*/
     }
 
-    public void increaseWorkTime(View view) {
-        TextView workTimeTextView = findViewById(R.id.workTimeEditText);
-        workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(workTimeTextView.getText().toString()) * 1000 + 1000));
+    public void increaseTime(View view) {
+        TextView textView = (TextView) view.getTag();
+        textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(textView.getText().toString()) * 1000 + 1000));
+    }
+
+    public void decreaseTime(View view) {
+        TextView textView = (TextView) view.getTag();
+        textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(textView.getText().toString()) * 1000 - 1000));
     }
 
     @Override

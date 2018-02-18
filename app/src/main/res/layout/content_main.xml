@@ -83,7 +83,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:onClick="increaseWorkTime"
+                                android:onClick="increaseTime"
                                 android:text="+" />
 
                             <Button
@@ -91,6 +91,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:onClick="decreaseTime"
                                 android:text="-" />
 
 
@@ -125,6 +126,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:onClick="increaseTime"
                                 android:text="+" />
 
                             <Button
@@ -132,6 +134,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:onClick="decreaseTime"
                                 android:text="-" />
 
                         </LinearLayout>
@@ -222,6 +225,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:onClick="increaseTime"
                                 android:text="+" />
 
                             <Button
@@ -229,6 +233,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:onClick="decreaseTime"
                                 android:text="-" />
 
                         </LinearLayout>
