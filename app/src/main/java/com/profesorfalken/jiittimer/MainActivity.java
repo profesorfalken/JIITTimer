@@ -159,6 +159,21 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        TextWatcher cycleWatchers = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                refreshTotals();
+            }
+        };
+
         View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -220,18 +235,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
-
-
-
         EditText workTimeEditText = findViewById(R.id.workTimeEditText);
         EditText restTimeEditText = findViewById(R.id.restTimeEditText);
-        //EditText cyclesEditText = findViewById(R.id.cyclesEditText);
+        EditText cyclesEditText = findViewById(R.id.cyclesEditText);
         EditText coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
 
         workTimeEditText.addTextChangedListener(timerWatchers);
         restTimeEditText.addTextChangedListener(timerWatchers);
-        //cyclesEditText.addTextChangedListener(timerWatchers);
+        cyclesEditText.addTextChangedListener(cycleWatchers);
         coolDownTimeEditText.addTextChangedListener(timerWatchers);
 
         workTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
@@ -341,6 +352,16 @@ public class MainActivity extends AppCompatActivity {
     public void decreaseTime(View view) {
         TextView textView = (TextView) view.getTag();
         textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(textView.getText().toString()) * 1000 - 1000));
+    }
+
+    public void increaseCycles(View view) {
+        TextView textView = findViewById(R.id.cyclesEditText);
+        textView.setText("" + (Integer.valueOf(textView.getText().toString()) + 1));
+    }
+
+    public void decreaseCycles(View view) {
+        TextView textView = findViewById(R.id.cyclesEditText);
+        textView.setText("" + (Integer.valueOf(textView.getText().toString()) - 1));
     }
 
     @Override
