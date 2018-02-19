@@ -23,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.profesorfalken.jiittimer.listener.CycleWatcher;
+import com.profesorfalken.jiittimer.listener.TimeTextWatcher;
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
 
 import java.util.ArrayList;
@@ -48,6 +50,20 @@ public class MainActivity extends AppCompatActivity {
     private boolean autoDecrement = false;
 
     private static int REP_DELAY = 50;
+
+    private EditText workTimeEditText;
+    private EditText restTimeEditText;
+    private EditText cyclesEditText;
+    private EditText coolDownTimeEditText;
+    private Button workOutIncreaseTimeButton;
+    private Button workOutDecreaseTimeButton;
+    private Button restIncreaseTimeButton;
+    private Button restDecreaseTimeButton;
+    private Button cooldownIncreaseTimeButton;
+    private Button cooldownDecreaseTimeButton;
+
+    TextView sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
+    TextView cycleCountTextView = findViewById(R.id.cycleCountTextView);
 
     class RptUpdater implements Runnable {
 
@@ -75,7 +91,22 @@ public class MainActivity extends AppCompatActivity {
         editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 + 1000) );
     }
 
+    private void initComponentVariables () {
+        this.workTimeEditText = findViewById(R.id.workTimeEditText);
+        this.restTimeEditText = findViewById(R.id.restTimeEditText);
+        this.cyclesEditText = findViewById(R.id.cyclesEditText);
+        this.coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
 
+        this.workOutIncreaseTimeButton = findViewById(R.id.workPlus);
+        this.workOutDecreaseTimeButton = findViewById(R.id.workLess);
+        this.restIncreaseTimeButton = findViewById(R.id.restPlus);
+        this.restDecreaseTimeButton = findViewById(R.id.restLess);
+        this.cooldownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
+        this.cooldownDecreaseTimeButton = findViewById(R.id.cooldownPlus);
+
+        this.sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
+        this.cycleCountTextView = findViewById(R.id.cycleCountTextView);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        initComponentVariables();
         //TODO: replace by configuration
         setInitTimeValues();
         fillDefaultPrograms();
@@ -108,71 +140,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initEvents() {
-        TextWatcher timerWatchers = new TextWatcher() {
-            private int lastPosition;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                this.lastPosition = start;
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                String text = s.toString();
-
-                int indexOfSeparator = text.indexOf(":");
-                if (indexOfSeparator == -1) {
-                    s.insert(this.lastPosition, ":");
-                }
-
-                String[] timeData = text.split(":");
-
-                if (timeData.length == 1 && indexOfSeparator == 0) {
-                    if (timeData[0].length() > 2) {
-                        s.delete(s.length() -1, s.length());
-                    }
-                } else if (timeData.length == 2) {
-                    if (timeData[1].length() > 2) {
-                        s.delete(s.length() -1, s.length());
-                    }
-                }
-
-                if (indexOfSeparator != 0) {
-                    if (timeData[0].length() > 2) {
-                        s.delete(0, 1);
-                    }
-                }
-
-
-                    /* else if (indexOfSeparator == 0) {
-                    s.insert(0, "00");
-                } else if (indexOfSeparator == text.length() - 1) {
-                    s.append("00");
-                }*/
-
-                refreshTotals();
-            }
-        };
-
-        TextWatcher cycleWatchers = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                refreshTotals();
-            }
-        };
 
         View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
             @Override
@@ -235,49 +202,44 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        EditText workTimeEditText = findViewById(R.id.workTimeEditText);
-        EditText restTimeEditText = findViewById(R.id.restTimeEditText);
-        EditText cyclesEditText = findViewById(R.id.cyclesEditText);
-        EditText coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
+        TimeTextWatcher timeTextWatcher = new TimeTextWatcher(this);
 
-        workTimeEditText.addTextChangedListener(timerWatchers);
-        restTimeEditText.addTextChangedListener(timerWatchers);
-        cyclesEditText.addTextChangedListener(cycleWatchers);
-        coolDownTimeEditText.addTextChangedListener(timerWatchers);
+        //Set TextWatcher
+        this.workTimeEditText.addTextChangedListener(timeTextWatcher);
+        this.restTimeEditText.addTextChangedListener(timeTextWatcher);
+        this.coolDownTimeEditText.addTextChangedListener(timeTextWatcher);
 
-        workTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
-        restTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
-        coolDownTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
+        //Set cycleWatcher
+        this.cyclesEditText.addTextChangedListener(new CycleWatcher(this));
 
-        Button workOutIncreaseTimeButton = findViewById(R.id.workPlus);
-        workOutIncreaseTimeButton.setTag(workTimeEditText);
-        workOutIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
-        workOutIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+        //Set onFocusChange Listener
+        this.workTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
+        this.restTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
+        this.coolDownTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
 
-        Button workOutDecreaseTimeButton = findViewById(R.id.workLess);
-        workOutDecreaseTimeButton.setTag(workTimeEditText);
-        workOutDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
-        workOutDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
+        //Set listener for increase and decrease buttons
 
-        Button restIncreaseTimeButton = findViewById(R.id.restPlus);
-        restIncreaseTimeButton.setTag(restTimeEditText);
-        restIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
-        restIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+        this.workOutIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
+        this.workOutIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+        this.workOutDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
+        this.workOutDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
+        this.restIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
+        this.restIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+        this.restDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
+        this.restDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
+        this.cooldownIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
+        this.cooldownIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+        this.cooldownDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
+        this.cooldownDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
 
-        Button restDecreaseTimeButton = findViewById(R.id.restLess);
-        restDecreaseTimeButton.setTag(restTimeEditText);
-        restDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
-        restDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
+        //Link each button with EditText views
+        this.workOutIncreaseTimeButton.setTag(workTimeEditText);
+        this.workOutDecreaseTimeButton.setTag(workTimeEditText);
+        this.restIncreaseTimeButton.setTag(restTimeEditText);
+        this.restDecreaseTimeButton.setTag(restTimeEditText);
+        this.cooldownIncreaseTimeButton.setTag(coolDownTimeEditText);
+        this.cooldownDecreaseTimeButton.setTag(coolDownTimeEditText);
 
-        Button cooldownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
-        cooldownIncreaseTimeButton.setTag(coolDownTimeEditText);
-        cooldownIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
-        cooldownIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
-
-        Button cooldownDecreaseTimeButton = findViewById(R.id.cooldownLess);
-        cooldownDecreaseTimeButton.setTag(coolDownTimeEditText);
-        cooldownDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
-        cooldownDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
     }
 
     private void fillDefaultPrograms() {
@@ -288,34 +250,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setInitTimeValues() {
-        EditText workTimeEditText = findViewById(R.id.workTimeEditText);
-        EditText restTimeEditText = findViewById(R.id.restTimeEditText);
-        EditText cyclesEditText = findViewById(R.id.cyclesEditText);
-        EditText coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
-
-        workTimeEditText.setText("00:30");
-        restTimeEditText.setText("00:10");
-        cyclesEditText.setText("3");
-        coolDownTimeEditText.setText("01:00");
+        this.workTimeEditText.setText("00:30");
+        this.restTimeEditText.setText("00:10");
+        this.cyclesEditText.setText("3");
+        this.coolDownTimeEditText.setText("01:00");
     }
 
-    private void refreshTotals() {
-        EditText workTimeEditText = findViewById(R.id.workTimeEditText);
-        EditText restTimeEditText = findViewById(R.id.restTimeEditText);
-        EditText cyclesEditText = findViewById(R.id.cyclesEditText);
-        EditText coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
+    public void refreshTotals() {
+        int cycles = cyclesEditText.getText().toString().length() > 0 ? Integer.valueOf(this.cyclesEditText.getText().toString()) : 0;
 
-        TextView sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
-        TextView cycleCountTextView = findViewById(R.id.cycleCountTextView);
+        int totalTimeInSeconds = (JiitTimeUtils.FormattedTimeToSeconds(this.workTimeEditText.getText().toString()) +
+                JiitTimeUtils.FormattedTimeToSeconds(this.restTimeEditText.getText().toString()))
+                * cycles + JiitTimeUtils.FormattedTimeToSeconds(this.coolDownTimeEditText.getText().toString());
 
-        int cycles = cyclesEditText.getText().toString().length() > 0 ? Integer.valueOf(cyclesEditText.getText().toString()) : 0;
-
-        int totalTimeInSeconds = (JiitTimeUtils.FormattedTimeToSeconds(workTimeEditText.getText().toString()) +
-                JiitTimeUtils.FormattedTimeToSeconds(restTimeEditText.getText().toString()))
-                * cycles + JiitTimeUtils.FormattedTimeToSeconds(coolDownTimeEditText.getText().toString());
-
-        sessionTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(totalTimeInSeconds * 1000));
-        cycleCountTextView.setText(String.format("%s/%s", "0", cyclesEditText.getText().toString()));
+        this.sessionTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(totalTimeInSeconds * 1000));
+        this.cycleCountTextView.setText(String.format("%s/%s", "0", this.cyclesEditText.getText().toString()));
     }
 
     public void clickGoButton(View view) {
@@ -355,13 +304,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void increaseCycles(View view) {
-        TextView textView = findViewById(R.id.cyclesEditText);
-        textView.setText("" + (Integer.valueOf(textView.getText().toString()) + 1));
+        this.cyclesEditText.setText("" + (Integer.valueOf(this.cyclesEditText.getText().toString()) + 1));
     }
 
     public void decreaseCycles(View view) {
-        TextView textView = findViewById(R.id.cyclesEditText);
-        textView.setText("" + (Integer.valueOf(textView.getText().toString()) - 1));
+        this.cyclesEditText.setText("" + (Integer.valueOf(this.cyclesEditText.getText().toString()) - 1));
     }
 
     @Override
