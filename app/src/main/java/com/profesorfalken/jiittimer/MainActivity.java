@@ -1,17 +1,9 @@
 package com.profesorfalken.jiittimer;
 
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
@@ -21,14 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.profesorfalken.jiittimer.listener.CycleWatcher;
 import com.profesorfalken.jiittimer.listener.TimeTextWatcher;
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private Button workOutDecreaseTimeButton;
     private Button restIncreaseTimeButton;
     private Button restDecreaseTimeButton;
-    private Button cooldownIncreaseTimeButton;
-    private Button cooldownDecreaseTimeButton;
+    private Button coolDownIncreaseTimeButton;
+    private Button coolDownDecreaseTimeButton;
 
     TextView sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
     TextView cycleCountTextView = findViewById(R.id.cycleCountTextView);
@@ -101,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
         this.workOutDecreaseTimeButton = findViewById(R.id.workLess);
         this.restIncreaseTimeButton = findViewById(R.id.restPlus);
         this.restDecreaseTimeButton = findViewById(R.id.restLess);
-        this.cooldownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
-        this.cooldownDecreaseTimeButton = findViewById(R.id.cooldownPlus);
+        this.coolDownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
+        this.coolDownDecreaseTimeButton = findViewById(R.id.cooldownPlus);
 
         this.sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
         this.cycleCountTextView = findViewById(R.id.cycleCountTextView);
@@ -227,18 +215,18 @@ public class MainActivity extends AppCompatActivity {
         this.restIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
         this.restDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
         this.restDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
-        this.cooldownIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
-        this.cooldownIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
-        this.cooldownDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
-        this.cooldownDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
+        this.coolDownIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
+        this.coolDownIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+        this.coolDownDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
+        this.coolDownDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
 
         //Link each button with EditText views
         this.workOutIncreaseTimeButton.setTag(workTimeEditText);
         this.workOutDecreaseTimeButton.setTag(workTimeEditText);
         this.restIncreaseTimeButton.setTag(restTimeEditText);
         this.restDecreaseTimeButton.setTag(restTimeEditText);
-        this.cooldownIncreaseTimeButton.setTag(coolDownTimeEditText);
-        this.cooldownDecreaseTimeButton.setTag(coolDownTimeEditText);
+        this.coolDownIncreaseTimeButton.setTag(coolDownTimeEditText);
+        this.coolDownDecreaseTimeButton.setTag(coolDownTimeEditText);
 
     }
 
