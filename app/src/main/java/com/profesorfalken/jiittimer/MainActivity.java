@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private Button coolDownIncreaseTimeButton;
     private Button coolDownDecreaseTimeButton;
 
-    TextView sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
-    TextView cycleCountTextView = findViewById(R.id.cycleCountTextView);
+    TextView sessionTimeTextView;
+    TextView cycleCountTextView;
 
     class RptUpdater implements Runnable {
 
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         this.restIncreaseTimeButton = findViewById(R.id.restPlus);
         this.restDecreaseTimeButton = findViewById(R.id.restLess);
         this.coolDownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
-        this.coolDownDecreaseTimeButton = findViewById(R.id.cooldownPlus);
+        this.coolDownDecreaseTimeButton = findViewById(R.id.cooldownLess);
 
         this.sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
         this.cycleCountTextView = findViewById(R.id.cycleCountTextView);
@@ -206,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
         this.coolDownTimeEditText.setOnFocusChangeListener(onFocusChangeListener);
 
         //Set listener for increase and decrease buttons
-
         this.workOutIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
         this.workOutIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
         this.workOutDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
