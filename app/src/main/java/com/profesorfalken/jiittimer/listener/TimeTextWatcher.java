@@ -11,7 +11,7 @@ import com.profesorfalken.jiittimer.MainActivity;
 
 public class TimeTextWatcher implements TextWatcher {
     private int lastPosition;
-    private MainActivity parent;
+    private final MainActivity parent;
 
     public TimeTextWatcher(MainActivity parent) {
         this.parent = parent;

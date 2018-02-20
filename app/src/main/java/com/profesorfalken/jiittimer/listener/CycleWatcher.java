@@ -10,7 +10,7 @@ import com.profesorfalken.jiittimer.MainActivity;
  */
 
 public class CycleWatcher implements TextWatcher {
-    private MainActivity parent;
+    private final MainActivity parent;
 
     public CycleWatcher(MainActivity parent) {
         this.parent = parent;

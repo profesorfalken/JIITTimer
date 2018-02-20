@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,22 +23,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private static final long BASE_TIME = 1000;
-
+    private final static int REP_DELAY = 50;
+    private TextView sessionTimeTextView;
+    private TextView cycleCountTextView;
     private WorkoutTask[] programmedTimers;
-
     private long workTime = 5000;
-
     private long restTime = 10000;
-
     private int cycles = 5;
-
-    private Handler repeatUpdateHandler = new Handler();
-
+    private final Handler repeatUpdateHandler = new Handler();
     private boolean autoIncrement = false;
     private boolean autoDecrement = false;
-
-    private static int REP_DELAY = 50;
-
     private EditText workTimeEditText;
     private EditText restTimeEditText;
     private EditText cyclesEditText;
@@ -50,36 +44,15 @@ public class MainActivity extends AppCompatActivity {
     private Button coolDownIncreaseTimeButton;
     private Button coolDownDecreaseTimeButton;
 
-    TextView sessionTimeTextView;
-    TextView cycleCountTextView;
-
-    class RptUpdater implements Runnable {
-
-        private EditText editText = null;
-
-        public void setEditText (EditText editText) {
-            this.editText = editText;
-        }
-
-        public void run() {
-            if( autoIncrement ){
-                increment(this.editText);
-                repeatUpdateHandler.postDelayed( this, REP_DELAY );
-            } else if( autoDecrement ){
-                decrement(this.editText);
-                repeatUpdateHandler.postDelayed( this, REP_DELAY );
-            }
-        }
+    private void decrement(EditText editText) {
+        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000));
     }
 
-    public void decrement(EditText editText){
-        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000) );
-    }
-    public void increment(EditText editText){
-        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 + 1000) );
+    private void increment(EditText editText) {
+        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 + 1000));
     }
 
-    private void initComponentVariables () {
+    private void initComponentVariables() {
         this.workTimeEditText = findViewById(R.id.workTimeEditText);
         this.restTimeEditText = findViewById(R.id.restTimeEditText);
         this.cyclesEditText = findViewById(R.id.cyclesEditText);
@@ -141,18 +114,16 @@ public class MainActivity extends AppCompatActivity {
         };
 
         View.OnLongClickListener longClickIncreaseValueListener =
-                new View.OnLongClickListener(){
+                new View.OnLongClickListener() {
 
                     public boolean onLongClick(View arg0) {
                         autoIncrement = true;
                         RptUpdater updater = new RptUpdater();
                         updater.setEditText((EditText) arg0.getTag());
-                        repeatUpdateHandler.post( updater );
+                        repeatUpdateHandler.post(updater);
                         return false;
                     }
                 };
-
-
 
 
         View.OnTouchListener longTouchIncreaseValueListener = new View.OnTouchListener() {
@@ -166,18 +137,16 @@ public class MainActivity extends AppCompatActivity {
         };
 
         View.OnLongClickListener longClickDecreaseValueListener =
-                new View.OnLongClickListener(){
+                new View.OnLongClickListener() {
 
                     public boolean onLongClick(View arg0) {
                         autoDecrement = true;
                         RptUpdater updater = new RptUpdater();
                         updater.setEditText((EditText) arg0.getTag());
-                        repeatUpdateHandler.post( updater );
+                        repeatUpdateHandler.post(updater);
                         return false;
                     }
                 };
-
-
 
 
         View.OnTouchListener longTouchDecreaseValueListener = new View.OnTouchListener() {
@@ -318,5 +287,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class RptUpdater implements Runnable {
+
+        private EditText editText = null;
+
+        public void setEditText(EditText editText) {
+            this.editText = editText;
+        }
+
+        public void run() {
+            if (autoIncrement) {
+                increment(this.editText);
+                repeatUpdateHandler.postDelayed(this, REP_DELAY);
+            } else if (autoDecrement) {
+                decrement(this.editText);
+                repeatUpdateHandler.postDelayed(this, REP_DELAY);
+            }
+        }
     }
 }

@@ -11,13 +11,13 @@ import com.profesorfalken.jiittimer.util.JiitTimeUtils;
  * Created by Javier on 11/02/2018.
  */
 
-public class WorkoutTask {
+class WorkoutTask {
     private static final long COUNTDOWN_INTERVAL = 500;
 
-    private CountDownTimer timer;
-    private long duration;
-    private TextView textViewToUpdate;
-    private WorkoutTask next;
+    private final CountDownTimer timer;
+    private final long duration;
+    private final TextView textViewToUpdate;
+    private final WorkoutTask next;
     private boolean finished;
 
     public WorkoutTask(final long duration, final TextView textViewToUpdate, final WorkoutTask next) {
@@ -43,7 +43,7 @@ public class WorkoutTask {
 
 
 
-    public void start() {
+    private void start() {
         if (timer != null && !finished) {
             timer.start();
         }
