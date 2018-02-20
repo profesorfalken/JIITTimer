@@ -49,9 +49,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginTop="4dp"
                         android:orientation="vertical"
-                        tools:layout_editor_absoluteX="2dp"
-                        tools:layout_editor_absoluteY="2dp">
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
                             android:id="@+id/textView"
@@ -72,9 +76,9 @@
                                 android:id="@+id/workTimeEditText"
                                 android:layout_width="80dp"
                                 android:layout_height="wrap_content"
+                                android:digits="0123456789:"
                                 android:ems="10"
                                 android:gravity="center"
-                                android:digits="0123456789:"
                                 android:inputType="number"
                                 android:text="00:00" />
 
