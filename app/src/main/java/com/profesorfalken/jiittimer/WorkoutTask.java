@@ -3,13 +3,8 @@ package com.profesorfalken.jiittimer;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
-
-/**
- * Created by Javier on 11/02/2018.
- */
 
 class WorkoutTask {
     private static final long COUNTDOWN_INTERVAL = 500;

@@ -5,10 +5,6 @@ import android.text.TextWatcher;
 
 import com.profesorfalken.jiittimer.MainActivity;
 
-/**
- * Created by Javier on 18/02/2018.
- */
-
 public class CycleWatcher implements TextWatcher {
     private final MainActivity parent;
 

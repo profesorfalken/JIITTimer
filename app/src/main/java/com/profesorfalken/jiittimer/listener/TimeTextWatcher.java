@@ -5,10 +5,6 @@ import android.text.TextWatcher;
 
 import com.profesorfalken.jiittimer.MainActivity;
 
-/**
- * Created by Javier on 18/02/2018.
- */
-
 public class TimeTextWatcher implements TextWatcher {
     private int lastPosition;
     private final MainActivity parent;
