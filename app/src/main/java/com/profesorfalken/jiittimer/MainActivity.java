@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         initComponentVariables();
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillDefaultPrograms() {
-        Spinner programListSpinner = (Spinner) findViewById(R.id.programListSpinner);
+        Spinner programListSpinner = findViewById(R.id.programListSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.default_hiit_programs, android.R.layout.simple_spinner_dropdown_item);
         programListSpinner.setAdapter(adapter);
