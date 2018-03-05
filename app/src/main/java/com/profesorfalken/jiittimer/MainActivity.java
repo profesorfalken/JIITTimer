@@ -224,14 +224,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickGoButton(View view) {
-      /*  final TextView workTimeTextView = findViewById(R.id.workTimeTextView);
-        final TextView restTimeTextView = findViewById(R.id.restTimeTextView);
+        int cyclesToProgram = Integer.valueOf(this.cyclesEditText.getText().toString()).intValue();
 
-        int cyclesToProgram = this.cycles;
-        if (this.restTime >= 1000) {
-            cyclesToProgram *= 2;
-        }
-
+/*
         this.programmedTimers = new WorkoutTask[cyclesToProgram];
 
         //Program timers
