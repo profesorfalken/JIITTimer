@@ -18,7 +18,7 @@ public class JiitTimeUtils {
         return formatted;
     }
 
-    public static int FormattedTimeToSeconds(String formattedTime) {
+    public static int formattedTimeToSeconds(String formattedTime) {
         int indexOfSeparator = formattedTime.indexOf(":");
         if (indexOfSeparator == -1 || formattedTime.length() == 1) {
             formattedTime = "00:00";

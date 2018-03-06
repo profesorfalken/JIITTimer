@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private WorkoutTask[] programmedTimers;
     private long workTime = 5000;
     private long restTime = 10000;
-    private int cycles = 5;
     private final Handler repeatUpdateHandler = new Handler();
     private boolean autoIncrement = false;
     private boolean autoDecrement = false;
@@ -43,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private Button restDecreaseTimeButton;
     private Button coolDownIncreaseTimeButton;
     private Button coolDownDecreaseTimeButton;
+    private TextView cycleTimeTextView;
 
     private void decrement(EditText editText) {
-        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000));
+        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000));
     }
 
     private void increment(EditText editText) {
-        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000 + 1000));
+        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) * 1000 + 1000));
     }
 
     private void initComponentVariables() {
@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
         this.cycleCountTextView = findViewById(R.id.cycleCountTextView);
+
+        this.cycleTimeTextView = findViewById(R.id.cycleTimeTextView);
     }
 
     @Override
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!hasFocus) {
                     EditText editText = (EditText) v;
                     editText.setText(JiitTimeUtils.millisToFormattedTime(
-                            JiitTimeUtils.FormattedTimeToSeconds(editText.getText().toString()) * 1000));
+                            JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) * 1000));
                 }
             }
         };
@@ -215,9 +217,9 @@ public class MainActivity extends AppCompatActivity {
     public void refreshTotals() {
         int cycles = cyclesEditText.getText().toString().length() > 0 ? Integer.valueOf(this.cyclesEditText.getText().toString()) : 0;
 
-        int totalTimeInSeconds = (JiitTimeUtils.FormattedTimeToSeconds(this.workTimeEditText.getText().toString()) +
-                JiitTimeUtils.FormattedTimeToSeconds(this.restTimeEditText.getText().toString()))
-                * cycles + JiitTimeUtils.FormattedTimeToSeconds(this.coolDownTimeEditText.getText().toString());
+        int totalTimeInSeconds = (JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString()) +
+                JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString()))
+                * cycles + JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString());
 
         this.sessionTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(totalTimeInSeconds * 1000));
         this.cycleCountTextView.setText(String.format("%s/%s", "0", this.cyclesEditText.getText().toString()));
@@ -226,32 +228,39 @@ public class MainActivity extends AppCompatActivity {
     public void clickGoButton(View view) {
         int cyclesToProgram = Integer.valueOf(this.cyclesEditText.getText().toString()).intValue();
 
-/*
+        int workTime = JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString());
+        int restTime = JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString());
+
+        if (restTime > 0) {
+            cyclesToProgram *= 2;
+        }
+
         this.programmedTimers = new WorkoutTask[cyclesToProgram];
 
         //Program timers
         int i = cyclesToProgram -1;
         WorkoutTask next = null;
+
         while (i >= 0) {
-            if (this.restTime >= 1000) {
-                this.programmedTimers[i] = new WorkoutTask(this.restTime, restTimeTextView, next);
+            if (restTime > 0) {
+                this.programmedTimers[i] = new WorkoutTask(restTime, this.cycleTimeTextView, next);
                 next = this.programmedTimers[i--];
             }
-            this.programmedTimers[i] = new WorkoutTask(this.workTime, workTimeTextView, next);
+            this.programmedTimers[i] = new WorkoutTask(workTime, this.cycleTimeTextView, next);
             next = this.programmedTimers[i--];
         }
 
-        this.programmedTimers[0].start();*/
+        this.programmedTimers[0].start();
     }
 
     public void increaseTime(View view) {
         TextView textView = (TextView) view.getTag();
-        textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(textView.getText().toString()) * 1000 + 1000));
+        textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(textView.getText().toString()) * 1000 + 1000));
     }
 
     public void decreaseTime(View view) {
         TextView textView = (TextView) view.getTag();
-        textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.FormattedTimeToSeconds(textView.getText().toString()) * 1000 - 1000));
+        textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(textView.getText().toString()) * 1000 - 1000));
     }
 
     public void increaseCycles(View view) {

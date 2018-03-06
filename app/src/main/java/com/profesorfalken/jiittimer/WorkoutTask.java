@@ -20,13 +20,13 @@ class WorkoutTask {
         this.textViewToUpdate = textViewToUpdate;
         this.next = next;
 
-        this.timer = new CountDownTimer(duration, COUNTDOWN_INTERVAL) {
+        this.timer = new CountDownTimer(duration * 1000, COUNTDOWN_INTERVAL) {
             public void onTick(long millisUntilFinished) {
-                textViewToUpdate.setText(JiitTimeUtils.millisToFormattedTime(millisUntilFinished));
+                textViewToUpdate.setText(String.format("%d", millisUntilFinished / 1000));
             }
 
             public void onFinish() {
-                textViewToUpdate.setText("00:00");
+                textViewToUpdate.setText("0");
                 if (next != null) {
                     next.start();
                 } else {
@@ -36,7 +36,7 @@ class WorkoutTask {
         };
     }
 
-    private void start() {
+    public void start() {
         if (timer != null && !finished) {
             timer.start();
         }
