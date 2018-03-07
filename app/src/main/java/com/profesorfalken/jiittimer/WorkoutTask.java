@@ -14,6 +14,7 @@ class WorkoutTask {
     private final TextView textViewToUpdate;
     private final WorkoutTask next;
     private boolean finished;
+    private boolean increateCycle;
 
     public WorkoutTask(final long duration, final TextView textViewToUpdate, final WorkoutTask next) {
         this.duration = duration;
@@ -36,8 +37,16 @@ class WorkoutTask {
         };
     }
 
+    public void increaseCycle() {
+        this.increateCycle = true;
+    }
+
     public void start() {
         if (timer != null && !finished) {
+            if (this.increateCycle) {
+
+            }
+
             timer.start();
         }
     }
