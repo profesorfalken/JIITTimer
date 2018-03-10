@@ -247,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
                 next = this.programmedTimers[i--];
             }
             this.programmedTimers[i] = new WorkoutTask(workTime, this.cycleTimeTextView, next);
+            this.programmedTimers[i].increaseCycle(this.cycleCountTextView);
             next = this.programmedTimers[i--];
         }
 
