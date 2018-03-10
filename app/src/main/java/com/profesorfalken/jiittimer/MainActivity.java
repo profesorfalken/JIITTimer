@@ -230,9 +230,13 @@ public class MainActivity extends AppCompatActivity {
 
         int workTime = JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString());
         int restTime = JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString());
+        int cooldownTime = JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString());
 
         if (restTime > 0) {
             cyclesToProgram *= 2;
+        }
+        if (cooldownTime > 0) {
+            cyclesToProgram++;
         }
 
         this.programmedTimers = new WorkoutTask[cyclesToProgram];
@@ -241,17 +245,24 @@ public class MainActivity extends AppCompatActivity {
         int i = cyclesToProgram -1;
         WorkoutTask next = null;
 
+        if (cooldownTime > 0) {
+            next = addProgrammedTimer(cooldownTime, i--, next);
+        }
+
         while (i >= 0) {
             if (restTime > 0) {
-                this.programmedTimers[i] = new WorkoutTask(restTime, this.cycleTimeTextView, next);
-                next = this.programmedTimers[i--];
+                next = addProgrammedTimer(restTime, i--, next);
             }
-            this.programmedTimers[i] = new WorkoutTask(workTime, this.cycleTimeTextView, next);
-            this.programmedTimers[i].increaseCycle(this.cycleCountTextView);
-            next = this.programmedTimers[i--];
+            next = addProgrammedTimer(workTime, i--, next);
+            next.increaseCycle(this.cycleCountTextView);
         }
 
         this.programmedTimers[0].start();
+    }
+
+    private WorkoutTask addProgrammedTimer(int time, int index, WorkoutTask next) {
+        this.programmedTimers[index] = new WorkoutTask(time, this.cycleTimeTextView, next);
+        return this.programmedTimers[index];
     }
 
     public void increaseTime(View view) {
