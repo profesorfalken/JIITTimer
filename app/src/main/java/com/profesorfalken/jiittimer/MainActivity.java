@@ -42,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private Button restDecreaseTimeButton;
     private Button coolDownIncreaseTimeButton;
     private Button coolDownDecreaseTimeButton;
+    private Button goButton;
     private TextView cycleTimeTextView;
+    private boolean timerActive = false;
 
     private void decrement(EditText editText) {
         editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000));
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         this.restDecreaseTimeButton = findViewById(R.id.restLess);
         this.coolDownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
         this.coolDownDecreaseTimeButton = findViewById(R.id.cooldownLess);
+        this.goButton = findViewById(R.id.goButton);
 
         this.sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
         this.cycleCountTextView = findViewById(R.id.cycleCountTextView);
@@ -226,6 +229,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickGoButton(View view) {
+        toggleTimerMode();
+
         int cyclesToProgram = Integer.valueOf(this.cyclesEditText.getText().toString()).intValue();
 
         int workTime = JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString());
@@ -261,8 +266,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private WorkoutTask addProgrammedTimer(int time, int index, WorkoutTask next) {
-        this.programmedTimers[index] = new WorkoutTask(time, this.cycleTimeTextView, next);
+        this.programmedTimers[index] = new WorkoutTask(this, time, this.cycleTimeTextView, next);
         return this.programmedTimers[index];
+    }
+
+    void toggleTimerMode() {
+        this.timerActive = !this.timerActive;
+
+        boolean enabled = !this.timerActive;
+        this.workTimeEditText.setEnabled(enabled);
+        this.restTimeEditText.setEnabled(enabled);
+        this.cyclesEditText.setEnabled(enabled);
+        this.coolDownTimeEditText.setEnabled(enabled);
+        this.workOutIncreaseTimeButton.setEnabled(enabled);
+        this.workOutDecreaseTimeButton.setEnabled(enabled);
+        this.restIncreaseTimeButton.setEnabled(enabled);
+        this.restDecreaseTimeButton.setEnabled(enabled);
+        this.coolDownIncreaseTimeButton.setEnabled(enabled);
+        this.coolDownDecreaseTimeButton.setEnabled(enabled);
+
+        this.goButton.setEnabled(enabled);
     }
 
     public void increaseTime(View view) {

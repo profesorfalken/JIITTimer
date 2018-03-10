@@ -1,5 +1,6 @@
 package com.profesorfalken.jiittimer;
 
+import android.app.Activity;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.TextView;
@@ -15,10 +16,12 @@ class WorkoutTask {
     private boolean increaseCycle;
     private TextView cycleCountTextView;
 
-    public WorkoutTask(final long duration, final TextView textViewToUpdate, final WorkoutTask next) {
+    public WorkoutTask(final Activity contextActivity, final long duration, final TextView textViewToUpdate, final WorkoutTask next) {
         this.duration = duration;
         this.textViewToUpdate = textViewToUpdate;
         this.next = next;
+
+        final MainActivity callbackActivity = (MainActivity) contextActivity;
 
         this.timer = new CountDownTimer(duration * 1000, COUNTDOWN_INTERVAL) {
             public void onTick(long millisUntilFinished) {
@@ -30,6 +33,7 @@ class WorkoutTask {
                 if (next != null) {
                     next.start();
                 } else {
+                    callbackActivity.toggleTimerMode();
                     Log.i("WorkoutTask", "The End");
                 }
             }
