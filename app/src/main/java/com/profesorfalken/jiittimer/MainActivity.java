@@ -211,10 +211,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setInitTimeValues() {
-        this.workTimeEditText.setText("00:30");
-        this.restTimeEditText.setText("00:10");
+        this.workTimeEditText.setText("00:05");
+        this.restTimeEditText.setText("00:03");
         this.cyclesEditText.setText("3");
-        this.coolDownTimeEditText.setText("01:00");
+        this.coolDownTimeEditText.setText("00:10");
     }
 
     public void refreshTotals() {
@@ -285,7 +285,21 @@ public class MainActivity extends AppCompatActivity {
         this.coolDownIncreaseTimeButton.setEnabled(enabled);
         this.coolDownDecreaseTimeButton.setEnabled(enabled);
 
+        if (enabled == true) {
+            refreshTotals();
+        }
+
         this.goButton.setEnabled(enabled);
+    }
+
+    void decreaseTotalTime() {
+        int totalTimeInSeconds = JiitTimeUtils.formattedTimeToSeconds(this.sessionTimeTextView.getText().toString());
+        totalTimeInSeconds--;
+        this.sessionTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(totalTimeInSeconds * 1000));
+
+        int counterTimeInSeconds = Integer.valueOf(this.cycleTimeTextView.getText().toString());
+        counterTimeInSeconds--;
+        this.cycleTimeTextView.setText(String.valueOf(counterTimeInSeconds));
     }
 
     public void increaseTime(View view) {

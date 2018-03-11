@@ -2,41 +2,49 @@ package com.profesorfalken.jiittimer;
 
 import android.app.Activity;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
 class WorkoutTask {
-    private static final long COUNTDOWN_INTERVAL = 500;
+    private static final long COUNTDOWN_INTERVAL = 1000;
 
-    private final CountDownTimer timer;
+    private final ThreadedCountDownTimer timer;
     private final long duration;
     private final TextView textViewToUpdate;
     private final WorkoutTask next;
     private boolean finished;
     private boolean increaseCycle;
     private TextView cycleCountTextView;
+    private Activity contextActivity;
+    private long previousDuration;
 
     public WorkoutTask(final Activity contextActivity, final long duration, final TextView textViewToUpdate, final WorkoutTask next) {
         this.duration = duration;
         this.textViewToUpdate = textViewToUpdate;
         this.next = next;
+        this.contextActivity = contextActivity;
 
-        final MainActivity callbackActivity = (MainActivity) contextActivity;
-
-        this.timer = new CountDownTimer(duration * 1000, COUNTDOWN_INTERVAL) {
-            public void onTick(long millisUntilFinished) {
-                textViewToUpdate.setText(String.format("%d", millisUntilFinished / 1000));
+        this.timer = new ThreadedCountDownTimer((duration-1) * 1000, COUNTDOWN_INTERVAL) {
+            @Override
+            public void onTick() {
+                ((MainActivity) contextActivity).decreaseTotalTime();
+                Log.i("WorkoutTask", "Onclick captured!");
             }
 
+            @Override
             public void onFinish() {
-                textViewToUpdate.setText("0");
                 if (next != null) {
+                    ((MainActivity) contextActivity).decreaseTotalTime();
                     next.start();
                 } else {
-                    callbackActivity.toggleTimerMode();
-                    Log.i("WorkoutTask", "The End");
+                    textViewToUpdate.setText("FINISH!");
+                    ((MainActivity) contextActivity).toggleTimerMode();
                 }
+                Log.i("WorkoutTask", "OnFinish captured!");
             }
+
+
         };
     }
 
@@ -53,6 +61,8 @@ class WorkoutTask {
 
                 this.cycleCountTextView.setText(String.valueOf(Integer.valueOf(cycleData[0]) + 1) + "/" + cycleData[1]);
             }
+
+            this.textViewToUpdate.setText(String.valueOf(this.duration));
 
             timer.start();
         }
