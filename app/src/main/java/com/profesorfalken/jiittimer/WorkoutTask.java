@@ -12,18 +12,12 @@ class WorkoutTask {
     private final ThreadedCountDownTimer timer;
     private final long duration;
     private final TextView textViewToUpdate;
-    private final WorkoutTask next;
-    private boolean finished;
     private boolean increaseCycle;
     private TextView cycleCountTextView;
-    private Activity contextActivity;
-    private long previousDuration;
 
     public WorkoutTask(final Activity contextActivity, final long duration, final TextView textViewToUpdate, final WorkoutTask next) {
         this.duration = duration;
         this.textViewToUpdate = textViewToUpdate;
-        this.next = next;
-        this.contextActivity = contextActivity;
 
         this.timer = new ThreadedCountDownTimer((duration-1) * 1000, COUNTDOWN_INTERVAL) {
             @Override
@@ -54,7 +48,7 @@ class WorkoutTask {
     }
 
     public void start() {
-        if (timer != null && !finished) {
+        if (timer != null) {
             if (this.increaseCycle) {
                 String cycleText = this.cycleCountTextView.getText().toString();
                 String[] cycleData = cycleText.split("/");
