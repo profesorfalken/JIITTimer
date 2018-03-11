@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.profesorfalken.jiittimer.counter.WorkoutTask;
 import com.profesorfalken.jiittimer.listener.CycleWatcher;
 import com.profesorfalken.jiittimer.listener.TimeTextWatcher;
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
@@ -270,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
         return this.programmedTimers[index];
     }
 
-    void toggleTimerMode() {
+    public void toggleTimerMode() {
         this.timerActive = !this.timerActive;
 
         boolean enabled = !this.timerActive;
@@ -292,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         this.goButton.setEnabled(enabled);
     }
 
-    void decreaseTotalTime() {
+    public void decreaseTotalTime() {
         int totalTimeInSeconds = JiitTimeUtils.formattedTimeToSeconds(this.sessionTimeTextView.getText().toString());
         totalTimeInSeconds--;
         this.sessionTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(totalTimeInSeconds * 1000));

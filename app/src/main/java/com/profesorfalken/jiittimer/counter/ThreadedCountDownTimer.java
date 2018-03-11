@@ -1,4 +1,4 @@
-package com.profesorfalken.jiittimer;
+package com.profesorfalken.jiittimer.counter;
 
 import android.os.Handler;
 import android.util.Log;

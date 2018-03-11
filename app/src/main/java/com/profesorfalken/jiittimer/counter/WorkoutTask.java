@@ -1,12 +1,12 @@
-package com.profesorfalken.jiittimer;
+package com.profesorfalken.jiittimer.counter;
 
 import android.app.Activity;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
-class WorkoutTask {
+import com.profesorfalken.jiittimer.MainActivity;
+
+public class WorkoutTask {
     private static final long COUNTDOWN_INTERVAL = 1000;
 
     private final ThreadedCountDownTimer timer;
