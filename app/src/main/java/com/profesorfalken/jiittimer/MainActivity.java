@@ -1,5 +1,7 @@
 package com.profesorfalken.jiittimer;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -212,6 +214,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setInitTimeValues() {
+        SharedPreferences initValues = getApplicationContext().getSharedPreferences("JiitWorkoutData", Context.MODE_PRIVATE);
+        String workoutsData = initValues.getString("WorkoutsData", "[{\"Title\", \"Default\", \"Data\", \"30|10|60|3\"}]");
+
+
+
         this.workTimeEditText.setText("00:05");
         this.restTimeEditText.setText("00:03");
         this.cyclesEditText.setText("3");

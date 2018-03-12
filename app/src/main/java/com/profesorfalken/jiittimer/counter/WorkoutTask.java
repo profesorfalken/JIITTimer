@@ -37,8 +37,6 @@ public class WorkoutTask {
                 }
                 Log.i("WorkoutTask", "OnFinish captured!");
             }
-
-
         };
     }
 
