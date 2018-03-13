@@ -21,6 +21,10 @@ import com.profesorfalken.jiittimer.listener.CycleWatcher;
 import com.profesorfalken.jiittimer.listener.TimeTextWatcher;
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -217,7 +221,12 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences initValues = getApplicationContext().getSharedPreferences("JiitWorkoutData", Context.MODE_PRIVATE);
         String workoutsData = initValues.getString("WorkoutsData", "[{\"Title\", \"Default\", \"Data\", \"30|10|60|3\"}]");
 
-
+        JSONArray jsonWorkoutsData = null;
+        try {
+            jsonWorkoutsData = new JSONArray(workoutsData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         this.workTimeEditText.setText("00:05");
         this.restTimeEditText.setText("00:03");
