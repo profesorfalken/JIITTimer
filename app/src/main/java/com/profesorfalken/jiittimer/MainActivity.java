@@ -25,6 +25,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private Button goButton;
     private TextView cycleTimeTextView;
     private boolean timerActive = false;
+
+    private ArrayAdapter<CharSequence> spinnerAdapter;
 
     private void decrement(EditText editText) {
         editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000));
@@ -91,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         initComponentVariables();
         //TODO: replace by configuration
         setInitTimeValues();
-        fillDefaultPrograms();
         refreshTotals();
 
         initEvents();
@@ -210,23 +213,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void fillDefaultPrograms() {
-        Spinner programListSpinner = findViewById(R.id.programListSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.default_hiit_programs, android.R.layout.simple_spinner_dropdown_item);
-        programListSpinner.setAdapter(adapter);
-    }
-
     private void setInitTimeValues() {
         SharedPreferences initValues = getApplicationContext().getSharedPreferences("JiitWorkoutData", Context.MODE_PRIVATE);
-        String workoutsData = initValues.getString("WorkoutsData", "[{\"Title\", \"Default\", \"Data\", \"30|10|60|3\"}]");
+        String workoutsData = initValues.getString("WorkoutsData", "[{\"Title\": \"Default\", \"Data\": \"30|10|60|3\"}]");
+
+        Spinner programListSpinner = findViewById(R.id.programListSpinner);
+        spinnerAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<CharSequence>());
+
+        programListSpinner.setAdapter(spinnerAdapter);
 
         JSONArray jsonWorkoutsData = null;
         try {
             jsonWorkoutsData = new JSONArray(workoutsData);
+
+            for (int i = 0; i<jsonWorkoutsData.length(); i++) {
+                spinnerAdapter.add((String)jsonWorkoutsData.getJSONObject(i).get("Title"));
+            }
+            spinnerAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
 
         this.workTimeEditText.setText("00:05");
         this.restTimeEditText.setText("00:03");
