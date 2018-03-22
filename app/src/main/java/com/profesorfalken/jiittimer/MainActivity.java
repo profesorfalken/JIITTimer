@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.profesorfalken.jiittimer.counter.WorkoutTask;
 import com.profesorfalken.jiittimer.listener.CycleWatcher;
 import com.profesorfalken.jiittimer.listener.TimeTextWatcher;
+import com.profesorfalken.jiittimer.model.WorkoutData;
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
 
 import org.json.JSONArray;
@@ -26,6 +27,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     private Button goButton;
     private TextView cycleTimeTextView;
     private boolean timerActive = false;
+    private Map<String, WorkoutData> allWorkoutsData = new HashMap<>();
+    private WorkoutData selectedWorkout;
 
     private ArrayAdapter<CharSequence> spinnerAdapter;
 
@@ -228,17 +234,23 @@ public class MainActivity extends AppCompatActivity {
 
             for (int i = 0; i<jsonWorkoutsData.length(); i++) {
                 spinnerAdapter.add((String)jsonWorkoutsData.getJSONObject(i).get("Title"));
+
+                StringTokenizer st = new StringTokenizer(((String) jsonWorkoutsData.getJSONObject(i).get("Data")), "|");
+                WorkoutData workoutData = new WorkoutData(Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()));
+
+                allWorkoutsData.put((String)jsonWorkoutsData.getJSONObject(i).get("Title"), workoutData);
             }
             spinnerAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        WorkoutData defaultWorkoutData = this.allWorkoutsData.get("Default");
 
-        this.workTimeEditText.setText("00:05");
-        this.restTimeEditText.setText("00:03");
-        this.cyclesEditText.setText("3");
-        this.coolDownTimeEditText.setText("00:10");
+        this.workTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(defaultWorkoutData.getWorkoutTime() * 1000));
+        this.restTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(defaultWorkoutData.getRestTime() * 1000));
+        this.cyclesEditText.setText(String.valueOf(defaultWorkoutData.getCycles()));
+        this.coolDownTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(defaultWorkoutData.getCooldownTime() * 1000));
     }
 
     public void refreshTotals() {
