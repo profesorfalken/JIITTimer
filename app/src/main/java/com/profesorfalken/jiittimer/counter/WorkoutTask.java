@@ -45,6 +45,10 @@ public class WorkoutTask {
         this.cycleCountTextView = cycleCountTextView;
     }
 
+    public void stop() {
+        this.timer.stop();
+    }
+
     public void start() {
         if (timer != null) {
             if (this.increaseCycle) {

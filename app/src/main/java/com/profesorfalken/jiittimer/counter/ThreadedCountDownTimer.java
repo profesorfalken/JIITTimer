@@ -8,6 +8,7 @@ public abstract class ThreadedCountDownTimer {
     private long countDownInterval;
     private Handler handler;
     private Runnable counter;
+    private volatile boolean shutdown = false;
 
     public ThreadedCountDownTimer(long millisInFuture, long countDownInterval) {
         this.millisInFuture = millisInFuture;
@@ -23,6 +24,10 @@ public abstract class ThreadedCountDownTimer {
 
     public abstract void onFinish();
 
+    public void stop() {
+        this.shutdown = true;
+    }
+
     public void initialize()
     {
         handler = new Handler();
@@ -35,9 +40,13 @@ public abstract class ThreadedCountDownTimer {
                     onFinish();
                 } else {
                     Log.v("status", Long.toString(sec) + " seconds remain");
-                    millisInFuture -= countDownInterval;
-                    onTick();
-                    handler.postDelayed(this, countDownInterval);
+                    if (!shutdown) {
+                        millisInFuture -= countDownInterval;
+                        onTick();
+                        handler.postDelayed(this, countDownInterval);
+                    } else {
+                        Log.v("status", "Shutdown timer!");
+                    }
                 }
             }
         };

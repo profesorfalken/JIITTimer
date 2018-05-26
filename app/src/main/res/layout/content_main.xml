@@ -314,6 +314,15 @@
                     android:onClick="clickGoButton"
                     android:text="GO!"
                     android:textSize="36sp" />
+                <Button
+                    android:id="@+id/stopButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="clickStopButton"
+                    android:text="Stop!"
+                    android:textSize="36sp"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
 

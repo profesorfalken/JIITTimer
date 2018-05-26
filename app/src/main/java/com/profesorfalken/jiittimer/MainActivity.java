@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private Button cyclesIncreaseTimeButton;
     private Button cyclesDecreaseTimeButton;
     private Button goButton;
+    private Button stopButton;
     private TextView cycleTimeTextView;
     private boolean timerActive = false;
     private Map<String, WorkoutData> allWorkoutsData = new HashMap<>();
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         this.cyclesIncreaseTimeButton = findViewById(R.id.cyclesPlus);
         this.cyclesDecreaseTimeButton = findViewById(R.id.cyclesLess);
         this.goButton = findViewById(R.id.goButton);
+        this.stopButton = findViewById(R.id.stopButton);
 
         this.sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
         this.cycleCountTextView = findViewById(R.id.cycleCountTextView);
@@ -308,7 +310,32 @@ public class MainActivity extends AppCompatActivity {
             next.increaseCycle(this.cycleCountTextView);
         }
 
+        this.goButton.setVisibility(View.GONE);
+        this.stopButton.setVisibility(View.VISIBLE);
+
         this.programmedTimers[0].start();
+    }
+
+    public void clickStopButton(View view) {
+        toggleTimerMode();
+
+        resetTimers();
+
+        setInitTimeValues();
+        refreshTotals();
+
+        this.stopButton.setVisibility(View.GONE);
+        this.goButton.setVisibility(View.VISIBLE);
+
+        this.cycleTimeTextView.setText("READY");
+    }
+
+    private void resetTimers() {
+        for (WorkoutTask timer : this.programmedTimers) {
+            timer.stop();
+        }
+        //Dereference
+        this.programmedTimers = null;
     }
 
     private WorkoutTask addProgrammedTimer(int time, int index, WorkoutTask next) {
