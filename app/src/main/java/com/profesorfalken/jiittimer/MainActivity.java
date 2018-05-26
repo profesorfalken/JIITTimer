@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private Button restDecreaseTimeButton;
     private Button coolDownIncreaseTimeButton;
     private Button coolDownDecreaseTimeButton;
+    private Button cyclesIncreaseTimeButton;
+    private Button cyclesDecreaseTimeButton;
     private Button goButton;
     private TextView cycleTimeTextView;
     private boolean timerActive = false;
@@ -83,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
         this.restDecreaseTimeButton = findViewById(R.id.restLess);
         this.coolDownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
         this.coolDownDecreaseTimeButton = findViewById(R.id.cooldownLess);
+        this.cyclesIncreaseTimeButton = findViewById(R.id.cyclesPlus);
+        this.cyclesDecreaseTimeButton = findViewById(R.id.cyclesLess);
         this.goButton = findViewById(R.id.goButton);
 
         this.sessionTimeTextView = findViewById(R.id.sessionTimeTextView);
@@ -208,6 +212,10 @@ public class MainActivity extends AppCompatActivity {
         this.coolDownIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
         this.coolDownDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
         this.coolDownDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
+        this.cyclesIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
+        this.cyclesIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
+        this.cyclesDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
+        this.cyclesDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
 
         //Link each button with EditText views
         this.workOutIncreaseTimeButton.setTag(workTimeEditText);
@@ -216,6 +224,8 @@ public class MainActivity extends AppCompatActivity {
         this.restDecreaseTimeButton.setTag(restTimeEditText);
         this.coolDownIncreaseTimeButton.setTag(coolDownTimeEditText);
         this.coolDownDecreaseTimeButton.setTag(coolDownTimeEditText);
+        this.cyclesIncreaseTimeButton.setTag(cyclesEditText);
+        this.cyclesDecreaseTimeButton.setTag(cyclesEditText);
 
     }
 
@@ -320,6 +330,8 @@ public class MainActivity extends AppCompatActivity {
         this.restDecreaseTimeButton.setEnabled(enabled);
         this.coolDownIncreaseTimeButton.setEnabled(enabled);
         this.coolDownDecreaseTimeButton.setEnabled(enabled);
+        this.cyclesIncreaseTimeButton.setEnabled(enabled);
+        this.cyclesDecreaseTimeButton.setEnabled(enabled);
 
         if (enabled == true) {
             refreshTotals();
