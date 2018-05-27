@@ -104,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Prevent standby
+        this.findViewById(android.R.id.content).getRootView().setKeepScreenOn(true);
+
         initComponentVariables();
         //TODO: replace by configuration
         setInitTimeValues();
