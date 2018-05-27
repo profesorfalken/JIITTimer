@@ -1,10 +1,12 @@
 package com.profesorfalken.jiittimer.counter;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.profesorfalken.jiittimer.MainActivity;
+import com.profesorfalken.jiittimer.R;
 
 public class WorkoutTask {
     private static final long COUNTDOWN_INTERVAL = 1000;
@@ -60,7 +62,13 @@ public class WorkoutTask {
 
             this.textViewToUpdate.setText(String.valueOf(this.duration));
 
+            playStartSound();
             timer.start();
         }
+    }
+
+    private void playStartSound() {
+        MediaPlayer mediaPlayer = MediaPlayer.create(textViewToUpdate.getContext(), R.raw.train);
+        mediaPlayer.start();
     }
 }
