@@ -67,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<CharSequence> spinnerAdapter;
 
     private void decrement(EditText editText) {
-        editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000));
+        if (JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) > 0) {
+            editText.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) * 1000 - 1000));
+        }
     }
 
     private void increment(EditText editText) {
@@ -383,7 +385,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void decreaseTime(View view) {
         TextView textView = (TextView) view.getTag();
-        textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(textView.getText().toString()) * 1000 - 1000));
+        if (JiitTimeUtils.formattedTimeToSeconds(textView.getText().toString()) > 0) {
+            textView.setText(JiitTimeUtils.millisToFormattedTime(JiitTimeUtils.formattedTimeToSeconds(textView.getText().toString()) * 1000 - 1000));
+        }
     }
 
     public void increaseCycles(View view) {
