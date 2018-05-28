@@ -146,10 +146,10 @@ public class MainActivity extends AppCompatActivity {
         View.OnLongClickListener longClickIncreaseValueListener =
                 new View.OnLongClickListener() {
 
-                    public boolean onLongClick(View arg0) {
+                    public boolean onLongClick(View view) {
                         autoIncrement = true;
                         RptUpdater updater = new RptUpdater();
-                        updater.setEditText((EditText) arg0.getTag());
+                        updater.setEditText((EditText) view.getTag());
                         repeatUpdateHandler.post(updater);
                         return false;
                     }
@@ -217,10 +217,6 @@ public class MainActivity extends AppCompatActivity {
         this.coolDownIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
         this.coolDownDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
         this.coolDownDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
-        this.cyclesIncreaseTimeButton.setOnLongClickListener(longClickIncreaseValueListener);
-        this.cyclesIncreaseTimeButton.setOnTouchListener(longTouchIncreaseValueListener);
-        this.cyclesDecreaseTimeButton.setOnLongClickListener(longClickDecreaseValueListener);
-        this.cyclesDecreaseTimeButton.setOnTouchListener(longTouchDecreaseValueListener);
 
         //Link each button with EditText views
         this.workOutIncreaseTimeButton.setTag(workTimeEditText);
