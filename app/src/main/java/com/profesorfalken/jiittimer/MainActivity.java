@@ -365,6 +365,9 @@ public class MainActivity extends AppCompatActivity {
             refreshTotals();
         }
 
+        this.stopButton.setVisibility(View.GONE);
+        this.goButton.setVisibility(View.VISIBLE);
+
         this.goButton.setEnabled(enabled);
     }
 
