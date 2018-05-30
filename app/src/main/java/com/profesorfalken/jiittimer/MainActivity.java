@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView cycleTimeTextView;
     private boolean timerActive = false;
     private Map<String, WorkoutData> allWorkoutsData = new HashMap<>();
-    private WorkoutData selectedWorkout;
 
     private ArrayAdapter<CharSequence> spinnerAdapter;
 
@@ -259,11 +258,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         WorkoutData defaultWorkoutData = this.allWorkoutsData.get("Default");
-
-        this.workTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(defaultWorkoutData.getWorkoutTime() * 1000));
-        this.restTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(defaultWorkoutData.getRestTime() * 1000));
-        this.cyclesEditText.setText(String.valueOf(defaultWorkoutData.getCycles()));
-        this.coolDownTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(defaultWorkoutData.getCooldownTime() * 1000));
+        setWorkoutDataValues(defaultWorkoutData);
     }
 
     public void refreshTotals() {
@@ -322,13 +317,20 @@ public class MainActivity extends AppCompatActivity {
 
         resetTimers();
 
-        setInitTimeValues();
+        //setInitTimeValues();
         refreshTotals();
 
         this.stopButton.setVisibility(View.GONE);
         this.goButton.setVisibility(View.VISIBLE);
 
         this.cycleTimeTextView.setText("READY");
+    }
+
+    private void setWorkoutDataValues(WorkoutData workoutData) {
+        this.workTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(workoutData.getWorkoutTime() * 1000));
+        this.restTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(workoutData.getRestTime() * 1000));
+        this.cyclesEditText.setText(String.valueOf(workoutData.getCycles()));
+        this.coolDownTimeEditText.setText(JiitTimeUtils.millisToFormattedTime(workoutData.getCooldownTime() * 1000));
     }
 
     private void resetTimers() {
