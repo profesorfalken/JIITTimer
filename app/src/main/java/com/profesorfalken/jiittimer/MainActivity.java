@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView cycleTimeTextView;
     private boolean timerActive = false;
     private Map<String, WorkoutData> allWorkoutsData = new HashMap<>();
+    JSONArray jsonWorkoutsData = null;
 
     private ArrayAdapter<CharSequence> spinnerAdapter;
 
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setInitTimeValues() {
-        SharedPreferences initValues = getApplicationContext().getSharedPreferences("JiitWorkoutData", Context.MODE_PRIVATE);
+        SharedPreferences initValues = getApplicationContext().getSharedPreferences("com.profesorfalken.jiittimer.JiitWorkoutData", Context.MODE_PRIVATE);
         String workoutsData = initValues.getString("WorkoutsData", "[{\"Title\": \"Default\", \"Data\": \"30|10|60|3\"}]");
 
         Spinner programListSpinner = findViewById(R.id.programListSpinner);
@@ -240,17 +241,16 @@ public class MainActivity extends AppCompatActivity {
 
         programListSpinner.setAdapter(spinnerAdapter);
 
-        JSONArray jsonWorkoutsData = null;
         try {
-            jsonWorkoutsData = new JSONArray(workoutsData);
+            this.jsonWorkoutsData = new JSONArray(workoutsData);
 
-            for (int i = 0; i<jsonWorkoutsData.length(); i++) {
-                spinnerAdapter.add((String)jsonWorkoutsData.getJSONObject(i).get("Title"));
+            for (int i = 0; i<this.jsonWorkoutsData.length(); i++) {
+                spinnerAdapter.add((String)this.jsonWorkoutsData.getJSONObject(i).get("Title"));
 
-                StringTokenizer st = new StringTokenizer(((String) jsonWorkoutsData.getJSONObject(i).get("Data")), "|");
+                StringTokenizer st = new StringTokenizer(((String) this.jsonWorkoutsData.getJSONObject(i).get("Data")), "|");
                 WorkoutData workoutData = new WorkoutData(Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()));
 
-                allWorkoutsData.put((String)jsonWorkoutsData.getJSONObject(i).get("Title"), workoutData);
+                allWorkoutsData.put((String)this.jsonWorkoutsData.getJSONObject(i).get("Title"), workoutData);
             }
             spinnerAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
@@ -274,6 +274,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickGoButton(View view) {
         toggleTimerMode();
+
+        saveWorkout();
 
         int cyclesToProgram = Integer.valueOf(this.cyclesEditText.getText().toString()).intValue();
 
@@ -310,6 +312,11 @@ public class MainActivity extends AppCompatActivity {
         this.stopButton.setVisibility(View.VISIBLE);
 
         this.programmedTimers[0].start();
+    }
+
+    private void saveWorkout() {
+        SharedPreferences preferences = this.getSharedPreferences("com.profesorfalken.jiittimer.JiitWorkoutData", Context.MODE_PRIVATE);
+        preferences.edit().putString("WorkoutsData", this.jsonWorkoutsData.toString());
     }
 
     public void clickStopButton(View view) {
