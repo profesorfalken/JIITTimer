@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.profesorfalken.jiittimer.counter.WorkoutTask;
 import com.profesorfalken.jiittimer.listener.CycleWatcher;
 import com.profesorfalken.jiittimer.listener.TimeTextWatcher;
+import com.profesorfalken.jiittimer.model.SavedWorkout;
 import com.profesorfalken.jiittimer.model.WorkoutData;
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
 
@@ -62,9 +63,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView cycleTimeTextView;
     private boolean timerActive = false;
     private Map<String, WorkoutData> allWorkoutsData = new HashMap<>();
-    JSONArray jsonWorkoutsData = null;
+    private JSONArray jsonWorkoutsData = null;
 
-    private ArrayAdapter<CharSequence> spinnerAdapter;
+    private Spinner programListSpinner;
 
     private void decrement(EditText editText) {
         if (JiitTimeUtils.formattedTimeToSeconds(editText.getText().toString()) > 0) {
@@ -236,8 +237,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences initValues = getApplicationContext().getSharedPreferences("com.profesorfalken.jiittimer.JiitWorkoutData", Context.MODE_PRIVATE);
         String workoutsData = initValues.getString("WorkoutsData", "[{\"Title\": \"Default\", \"Data\": \"30|10|60|3\"}]");
 
-        Spinner programListSpinner = findViewById(R.id.programListSpinner);
-        spinnerAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<CharSequence>());
+        programListSpinner = findViewById(R.id.programListSpinner);
+        ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<CharSequence>());
 
         programListSpinner.setAdapter(spinnerAdapter);
 
@@ -316,7 +317,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveWorkout() {
         SharedPreferences preferences = this.getSharedPreferences("com.profesorfalken.jiittimer.JiitWorkoutData", Context.MODE_PRIVATE);
-        preferences.edit().putString("WorkoutsData", this.jsonWorkoutsData.toString());
+        String selectedProgram = programListSpinner.getSelectedItem().toString();
+        for (int i = 0; i<this.jsonWorkoutsData.length(); i++) {
+            try {
+                JSONObject workout = this.jsonWorkoutsData.getJSONObject(i);
+                if (selectedProgram.equals(workout.get("Title"))) {
+                       //String Data = WHERE??
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        preferences.edit().putString("WorkoutsData", this.jsonWorkoutsData.toString()).commit();
     }
 
     public void clickStopButton(View view) {
@@ -407,7 +420,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void decreaseCycles(View view) {
-        this.cyclesEditText.setText("" + (Integer.valueOf(this.cyclesEditText.getText().toString()) - 1));
+        if (Integer.valueOf(this.cyclesEditText.getText().toString()) > 0) {
+            this.cyclesEditText.setText("" + (Integer.valueOf(this.cyclesEditText.getText().toString()) - 1));
+        }
     }
 
     @Override
