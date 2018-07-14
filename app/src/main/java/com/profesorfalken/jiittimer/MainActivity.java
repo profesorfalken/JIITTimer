@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Prevent standby
         this.findViewById(android.R.id.content).getRootView().setKeepScreenOn(true);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         initComponentVariables();
         //TODO: replace by configuration
@@ -322,7 +324,16 @@ public class MainActivity extends AppCompatActivity {
             try {
                 JSONObject workout = this.jsonWorkoutsData.getJSONObject(i);
                 if (selectedProgram.equals(workout.get("Title"))) {
-                       //String Data = WHERE??
+                /*    JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString()) +
+                            JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString()))
+                * cycles + JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString()*/
+                    StringBuilder currentWorkoutData = new StringBuilder();
+                    currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString())).append("|");
+                    currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString())).append("|");
+                    currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString())).append("|");
+                    currentWorkoutData.append(this.cyclesEditText.getText());
+
+                    workout.put("Data", currentWorkoutData);
                 }
 
             } catch (JSONException e) {
