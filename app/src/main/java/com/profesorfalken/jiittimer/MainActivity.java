@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.profesorfalken.jiittimer.counter.WorkoutTask;
+import com.profesorfalken.jiittimer.dialog.AddWorkoutDialog;
 import com.profesorfalken.jiittimer.listener.CycleWatcher;
 import com.profesorfalken.jiittimer.listener.TimeTextWatcher;
 import com.profesorfalken.jiittimer.model.SavedWorkout;
@@ -436,6 +437,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void createNewWorkout(MenuItem item) {
+        AddWorkoutDialog dialog = new AddWorkoutDialog();
+        dialog.show(getFragmentManager(), "addWorkoutDialog");
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -451,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.addWorkout) {
             return true;
         }
 

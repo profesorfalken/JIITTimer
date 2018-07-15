@@ -3,8 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.profesorfalken.jiittimer.MainActivity">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:id="@+id/addWorkout"
+        android:onClick="createNewWorkout"
+        android:orderInCategory="101"
+        android:title="Add Workout"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/deleteWorkout"
+        android:orderInCategory="101"
+        android:title="Delete Workout"
         app:showAsAction="never" />
 </menu>
