@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +22,6 @@ import com.profesorfalken.jiittimer.counter.WorkoutTask;
 import com.profesorfalken.jiittimer.dialog.AddWorkoutDialog;
 import com.profesorfalken.jiittimer.listener.CycleWatcher;
 import com.profesorfalken.jiittimer.listener.TimeTextWatcher;
-import com.profesorfalken.jiittimer.model.SavedWorkout;
 import com.profesorfalken.jiittimer.model.WorkoutData;
 import com.profesorfalken.jiittimer.util.JiitTimeUtils;
 
@@ -36,7 +36,7 @@ import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final long BASE_TIME = 1000;
     private final static int REP_DELAY = 50;
@@ -236,6 +236,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private JSONArray getJsonWorkoutsData() {
+        return this.jsonWorkoutsData;
+    }
+
     private void setInitTimeValues() {
         SharedPreferences initValues = getApplicationContext().getSharedPreferences("com.profesorfalken.jiittimer.JiitWorkoutData", Context.MODE_PRIVATE);
         String workoutsData = initValues.getString("WorkoutsData", "[{\"Title\": \"Default\", \"Data\": \"30|10|60|3\"}]");
@@ -244,6 +248,34 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<CharSequence>());
 
         programListSpinner.setAdapter(spinnerAdapter);
+
+        programListSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                SharedPreferences preferences = getApplication().getSharedPreferences("com.profesorfalken.jiittimer.JiitWorkoutData", Context.MODE_PRIVATE);
+                String selectedProgram = programListSpinner.getSelectedItem().toString();
+
+                if (getJsonWorkoutsData() != null) {
+                    for (int i = 0; i < getJsonWorkoutsData().length(); i++) {
+                        try {
+                            JSONObject workout = getJsonWorkoutsData().getJSONObject(i);
+                            if (selectedProgram.equals(workout.get("Title"))) {
+                                StringTokenizer st = new StringTokenizer(((String) getJsonWorkoutsData().getJSONObject(i).get("Data")), "|");
+                                WorkoutData workoutData = new WorkoutData(Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken()));
+                                setWorkoutDataValues(workoutData);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
 
         try {
             this.jsonWorkoutsData = new JSONArray(workoutsData);
@@ -277,71 +309,87 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickGoButton(View view) {
-        toggleTimerMode();
-
         saveWorkout();
 
         int cyclesToProgram = Integer.valueOf(this.cyclesEditText.getText().toString()).intValue();
 
-        int workTime = JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString());
-        int restTime = JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString());
-        int cooldownTime = JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString());
+        if (cyclesToProgram > 0) {
+            toggleTimerMode();
 
-        if (restTime > 0) {
-            cyclesToProgram *= 2;
-        }
-        if (cooldownTime > 0) {
-            cyclesToProgram++;
-        }
+            int workTime = JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString());
+            int restTime = JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString());
+            int cooldownTime = JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString());
 
-        this.programmedTimers = new WorkoutTask[cyclesToProgram];
-
-        //Program timers
-        int i = cyclesToProgram -1;
-        WorkoutTask next = null;
-
-        if (cooldownTime > 0) {
-            next = addProgrammedTimer(cooldownTime, i--, next);
-        }
-
-        while (i >= 0) {
             if (restTime > 0) {
-                next = addProgrammedTimer(restTime, i--, next);
+                cyclesToProgram *= 2;
             }
-            next = addProgrammedTimer(workTime, i--, next);
-            next.increaseCycle(this.cycleCountTextView);
+            if (cooldownTime > 0) {
+                cyclesToProgram++;
+            }
+
+            this.programmedTimers = new WorkoutTask[cyclesToProgram];
+
+            //Program timers
+            int i = cyclesToProgram - 1;
+            WorkoutTask next = null;
+
+            if (cooldownTime > 0) {
+                next = addProgrammedTimer(cooldownTime, i--, next);
+            }
+
+            while (i >= 0) {
+                if (restTime > 0) {
+                    next = addProgrammedTimer(restTime, i--, next);
+                }
+                next = addProgrammedTimer(workTime, i--, next);
+                next.increaseCycle(this.cycleCountTextView);
+            }
+
+            this.goButton.setVisibility(View.GONE);
+            this.stopButton.setVisibility(View.VISIBLE);
+
+            this.programmedTimers[0].start();
         }
-
-        this.goButton.setVisibility(View.GONE);
-        this.stopButton.setVisibility(View.VISIBLE);
-
-        this.programmedTimers[0].start();
     }
 
     private void saveWorkout() {
         SharedPreferences preferences = this.getSharedPreferences("com.profesorfalken.jiittimer.JiitWorkoutData", Context.MODE_PRIVATE);
         String selectedProgram = programListSpinner.getSelectedItem().toString();
+
+        boolean found = false;
         for (int i = 0; i<this.jsonWorkoutsData.length(); i++) {
             try {
                 JSONObject workout = this.jsonWorkoutsData.getJSONObject(i);
                 if (selectedProgram.equals(workout.get("Title"))) {
-                /*    JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString()) +
-                            JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString()))
-                * cycles + JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString()*/
-                    StringBuilder currentWorkoutData = new StringBuilder();
-                    currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString())).append("|");
-                    currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString())).append("|");
-                    currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString())).append("|");
-                    currentWorkoutData.append(this.cyclesEditText.getText());
-
-                    workout.put("Data", currentWorkoutData);
+                    found = true;
+                    workout.put("Data", getCurrentWorkoutData());
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        if (!found) {
+            JSONObject newWorkout = new JSONObject();
+            try {
+                newWorkout.put("Title", selectedProgram);
+                newWorkout.put("Data", getCurrentWorkoutData());
+                this.jsonWorkoutsData.put(newWorkout);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         preferences.edit().putString("WorkoutsData", this.jsonWorkoutsData.toString()).commit();
+    }
+
+    private String getCurrentWorkoutData() {
+        StringBuilder currentWorkoutData = new StringBuilder();
+        currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.workTimeEditText.getText().toString())).append("|");
+        currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.restTimeEditText.getText().toString())).append("|");
+        currentWorkoutData.append(JiitTimeUtils.formattedTimeToSeconds(this.coolDownTimeEditText.getText().toString())).append("|");
+        currentWorkoutData.append(this.cyclesEditText.getText());
+
+        return currentWorkoutData.toString();
     }
 
     public void clickStopButton(View view) {
@@ -440,6 +488,14 @@ public class MainActivity extends AppCompatActivity {
     public void createNewWorkout(MenuItem item) {
         AddWorkoutDialog dialog = new AddWorkoutDialog();
         dialog.show(getFragmentManager(), "addWorkoutDialog");
+    }
+
+    public void addNewWorkout(String workoutName) {
+        ArrayAdapter<CharSequence> workoutListAdapter = ((ArrayAdapter<CharSequence>)programListSpinner.getAdapter());
+        workoutListAdapter.add(workoutName);
+        workoutListAdapter.notifyDataSetChanged();
+        programListSpinner.setSelection(workoutListAdapter.getCount() - 1, true);
+        saveWorkout();
     }
 
     @Override
