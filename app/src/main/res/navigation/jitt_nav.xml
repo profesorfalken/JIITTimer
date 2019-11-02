@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/jitt_nav"
+    app:startDestination="@id/workoutSettingsFragment">
+
+    <fragment
+        android:id="@+id/workoutSettingsFragment"
+        android:name="com.profesorfalken.jiittimer.gui.WorkoutTimerSettingsFragment"
+        android:label="workout_timer_settings"
+        tools:layout="@layout/workout_timer_settings" />
+</navigation>

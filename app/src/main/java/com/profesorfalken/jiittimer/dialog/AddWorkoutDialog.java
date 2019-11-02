@@ -3,17 +3,12 @@ package com.profesorfalken.jiittimer.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.profesorfalken.jiittimer.MainActivity;
-import com.profesorfalken.jiittimer.R;
+import com.profesorfalken.jiittimer.JIITActivity;
 
 public class AddWorkoutDialog extends DialogFragment {
     @Override
@@ -30,7 +25,7 @@ public class AddWorkoutDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String workoutName = workoutNameEditText.getText().toString();
                         if (!workoutName.trim().isEmpty()) {
-                            ((MainActivity)getActivity()).addNewWorkout(workoutName);
+                            ((JIITActivity)getActivity()).addNewWorkout(workoutName);
                         }
                         dismiss();
                     }

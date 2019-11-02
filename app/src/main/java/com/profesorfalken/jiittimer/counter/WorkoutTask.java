@@ -5,7 +5,7 @@ import android.media.MediaPlayer;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.profesorfalken.jiittimer.MainActivity;
+import com.profesorfalken.jiittimer.JIITActivity;
 import com.profesorfalken.jiittimer.R;
 
 public class WorkoutTask {
@@ -24,18 +24,18 @@ public class WorkoutTask {
         this.timer = new ThreadedCountDownTimer((duration-1) * 1000, COUNTDOWN_INTERVAL) {
             @Override
             public void onTick() {
-                ((MainActivity) contextActivity).decreaseTotalTime();
+                ((JIITActivity) contextActivity).decreaseTotalTime();
                 Log.i("WorkoutTask", "Onclick captured!");
             }
 
             @Override
             public void onFinish() {
                 if (next != null) {
-                    ((MainActivity) contextActivity).decreaseTotalTime();
+                    ((JIITActivity) contextActivity).decreaseTotalTime();
                     next.start();
                 } else {
                     textViewToUpdate.setText("FINISH!");
-                    ((MainActivity) contextActivity).toggleTimerMode();
+                    ((JIITActivity) contextActivity).toggleTimerMode();
                 }
                 Log.i("WorkoutTask", "OnFinish captured!");
             }

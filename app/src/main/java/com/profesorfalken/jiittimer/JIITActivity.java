@@ -34,12 +34,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-public class MainActivity extends AppCompatActivity {
+public class JIITActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = JIITActivity.class.getSimpleName();
 
     private static final long BASE_TIME = 1000;
-    private final static int REP_DELAY = 50;
+    private  static final int REP_DELAY = 50;
     private TextView sessionTimeTextView;
     private TextView cycleCountTextView;
     private WorkoutTask[] programmedTimers;
@@ -80,19 +80,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initComponentVariables() {
-        this.workTimeEditText = findViewById(R.id.workTimeEditText);
-        this.restTimeEditText = findViewById(R.id.restTimeEditText);
-        this.cyclesEditText = findViewById(R.id.cyclesEditText);
-        this.coolDownTimeEditText = findViewById(R.id.coolDownTimeEditText);
+        this.workTimeEditText = findViewById(R.id.workTime_edit);
+        this.restTimeEditText = findViewById(R.id.restTime_edit);
+        this.cyclesEditText = findViewById(R.id.cycles_edit);
+        this.coolDownTimeEditText = findViewById(R.id.coolDownTime_edit);
 
-        this.workOutIncreaseTimeButton = findViewById(R.id.workPlus);
-        this.workOutDecreaseTimeButton = findViewById(R.id.workLess);
+        this.workOutIncreaseTimeButton = findViewById(R.id.workTimePlus_button);
+        this.workOutDecreaseTimeButton = findViewById(R.id.workTimeLess_button);
         this.restIncreaseTimeButton = findViewById(R.id.restPlus);
         this.restDecreaseTimeButton = findViewById(R.id.restLess);
-        this.coolDownIncreaseTimeButton = findViewById(R.id.cooldownPlus);
-        this.coolDownDecreaseTimeButton = findViewById(R.id.cooldownLess);
-        this.cyclesIncreaseTimeButton = findViewById(R.id.cyclesPlus);
-        this.cyclesDecreaseTimeButton = findViewById(R.id.cyclesLess);
+        this.coolDownIncreaseTimeButton = findViewById(R.id.cooldownPlus_button);
+        this.coolDownDecreaseTimeButton = findViewById(R.id.cooldownLess_button);
+        this.cyclesIncreaseTimeButton = findViewById(R.id.cyclesPlus_button);
+        this.cyclesDecreaseTimeButton = findViewById(R.id.cyclesLess_button);
         this.goButton = findViewById(R.id.goButton);
         this.stopButton = findViewById(R.id.stopButton);
 
@@ -105,38 +105,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        setContentView(R.layout.activity_jiit);
+
+        //Set the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Prevent standby
+        //Prevent standby when running
         this.findViewById(android.R.id.content).getRootView().setKeepScreenOn(true);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        //Init all variable binding
         initComponentVariables();
+
+        //Declare all app listeners
+        initListeners();
+
         //TODO: replace by configuration
         setInitTimeValues();
         refreshTotals();
-
-        initEvents();
-
-/*
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.default_hiit_programs, android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
-
-        TextView workTimeTextView = findViewById(R.id.workTimeTextView);
-        workTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.workTime));
-
-        TextView restTimeTextView = findViewById(R.id.restTimeTextView);
-        restTimeTextView.setText(JiitTimeUtils.millisToFormattedTime(this.restTime));
-
-        TextView cyclesTextView = findViewById(R.id.cyclesTextView);
-        cyclesTextView.setText(String.format("%d", cycles));*/
     }
 
-    private void initEvents() {
+    private void initListeners() {
 
         View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
             @Override
@@ -244,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences initValues = getApplicationContext().getSharedPreferences("com.profesorfalken.jiittimer.JiitWorkoutData", Context.MODE_PRIVATE);
         String workoutsData = initValues.getString("WorkoutsData", "[{\"Title\": \"Default\", \"Data\": \"30|10|60|3\"}]");
 
-        programListSpinner = findViewById(R.id.programListSpinner);
+        programListSpinner = findViewById(R.id.programList_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_dropdown_item, new ArrayList<CharSequence>());
 
         programListSpinner.setAdapter(spinnerAdapter);
@@ -520,7 +511,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    class RptUpdater implements Runnable {
+    private class RptUpdater implements Runnable {
 
         private EditText editText = null;
 

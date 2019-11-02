@@ -3,13 +3,13 @@ package com.profesorfalken.jiittimer.listener;
 import android.text.Editable;
 import android.text.TextWatcher;
 
-import com.profesorfalken.jiittimer.MainActivity;
+import com.profesorfalken.jiittimer.JIITActivity;
 
 public class TimeTextWatcher implements TextWatcher {
     private int lastPosition;
-    private final MainActivity parent;
+    private final JIITActivity parent;
 
-    public TimeTextWatcher(MainActivity parent) {
+    public TimeTextWatcher(JIITActivity parent) {
         this.parent = parent;
     }
 
