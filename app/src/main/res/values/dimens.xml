@@ -3,4 +3,5 @@
     <dimen name="big_margin">32dp</dimen>
     <dimen name="normal_margin">16dp</dimen>
     <dimen name="setting_edit_width">100dp</dimen>
+    <dimen name="settings_text_size">36sp</dimen>
 </resources>

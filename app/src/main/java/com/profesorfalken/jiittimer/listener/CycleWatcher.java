@@ -24,6 +24,6 @@ public class CycleWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        this.parent.refreshTotals();
+        //this.parent.refreshTotals();
     }
 }

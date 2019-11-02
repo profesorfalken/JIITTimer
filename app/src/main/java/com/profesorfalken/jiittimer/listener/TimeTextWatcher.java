@@ -49,6 +49,6 @@ public class TimeTextWatcher implements TextWatcher {
             }
         }
 
-        this.parent.refreshTotals();
+        //this.parent.refreshTotals();
     }
 }

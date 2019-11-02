@@ -25,7 +25,7 @@ public class AddWorkoutDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String workoutName = workoutNameEditText.getText().toString();
                         if (!workoutName.trim().isEmpty()) {
-                            ((JIITActivity)getActivity()).addNewWorkout(workoutName);
+                            //((JIITActivity)getActivity()).addNewWorkout(workoutName);
                         }
                         dismiss();
                     }

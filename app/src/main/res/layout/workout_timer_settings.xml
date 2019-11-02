@@ -27,7 +27,7 @@
             android:layout_marginStart="@dimen/normal_margin"
             android:labelFor="@+id/workTime_edit"
             android:text="@string/work_time"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,32 +39,30 @@
             android:digits="0123456789:"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/default_start_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            tools:text="00:00" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <Button
             android:id="@+id/workTimePlus_button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/big_margin"
-            android:onClick="increaseTime"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/plus_symbol"
             app:layout_constraintStart_toEndOf="@id/workTime_edit"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            tools:text="+" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <Button
             android:id="@+id/workTimeLess_button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/big_margin"
-            android:onClick="decreaseTime"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/minus_symbol"
             app:layout_constraintStart_toEndOf="@id/workTimePlus_button"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            tools:text="-" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <TextView
             android:id="@+id/textView2"
@@ -74,7 +72,7 @@
             android:layout_marginTop="@dimen/normal_margin"
             android:labelFor="@+id/restTime_edit"
             android:text="@string/rest_time"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/workTime_edit" />
 
@@ -85,32 +83,30 @@
             android:layout_marginStart="@dimen/big_margin"
             android:importantForAutofill="no"
             android:inputType="numberDecimal"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/default_start_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            tools:text="00:00" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <Button
             android:id="@+id/restTimePlus_button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/big_margin"
-            android:onClick="increaseTime"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/plus_symbol"
             app:layout_constraintStart_toEndOf="@id/restTime_edit"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            tools:text="+" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <Button
             android:id="@+id/restTimeLess_button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/big_margin"
-            android:onClick="decreaseTime"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/minus_symbol"
             app:layout_constraintStart_toEndOf="@id/restTimePlus_button"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            tools:text="-" />
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <TextView
             android:id="@+id/cycles_text"
@@ -120,7 +116,7 @@
             android:layout_marginTop="@dimen/normal_margin"
             android:labelFor="@+id/cycles_edit"
             android:text="@string/cycles"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/restTime_edit" />
 
@@ -132,32 +128,30 @@
             android:gravity="center_horizontal"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/default_start_cycles"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cycles_text"
-            tools:text="0" />
+            app:layout_constraintTop_toBottomOf="@+id/cycles_text" />
 
         <Button
             android:id="@+id/cyclesPlus_button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/big_margin"
-            android:onClick="increaseCycles"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/plus_symbol"
             app:layout_constraintEnd_toEndOf="@id/restTimePlus_button"
-            app:layout_constraintTop_toBottomOf="@+id/cycles_text"
-            tools:text="+" />
+            app:layout_constraintTop_toBottomOf="@+id/cycles_text" />
 
         <Button
             android:id="@+id/cyclesLess_button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/big_margin"
-            android:onClick="decreaseCycles"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/plus_symbol"
             app:layout_constraintEnd_toEndOf="@id/restTimeLess_button"
-            app:layout_constraintTop_toBottomOf="@+id/cycles_text"
-            tools:text="-" />
+            app:layout_constraintTop_toBottomOf="@+id/cycles_text"/>
 
         <TextView
             android:id="@+id/cooldown_text"
@@ -167,7 +161,7 @@
             android:layout_marginTop="@dimen/normal_margin"
             android:labelFor="@+id/coolDownTime_edit"
             android:text="@string/cooldown_time"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cycles_edit" />
 
@@ -179,32 +173,30 @@
             android:digits="0123456789:"
             android:importantForAutofill="no"
             android:inputType="number"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/default_start_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cooldown_text"
-            tools:text="00:00" />
+            app:layout_constraintTop_toBottomOf="@+id/cooldown_text" />
 
         <Button
             android:id="@+id/cooldownPlus_button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/big_margin"
-            android:onClick="increaseTime"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/plus_symbol"
             app:layout_constraintStart_toEndOf="@id/coolDownTime_edit"
-            app:layout_constraintTop_toBottomOf="@+id/cooldown_text"
-            tools:text="+" />
+            app:layout_constraintTop_toBottomOf="@+id/cooldown_text" />
 
         <Button
             android:id="@+id/cooldownLess_button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_marginStart="@dimen/big_margin"
-            android:onClick="decreaseTime"
-            android:textSize="36sp"
+            android:textSize="@dimen/settings_text_size"
+            android:text="@string/minus_symbol"
             app:layout_constraintStart_toEndOf="@id/cooldownPlus_button"
-            app:layout_constraintTop_toBottomOf="@+id/cooldown_text"
-            tools:text="-" />
+            app:layout_constraintTop_toBottomOf="@+id/cooldown_text" />
 
     </android.support.constraint.ConstraintLayout>
 

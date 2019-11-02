@@ -24,18 +24,18 @@ public class WorkoutTask {
         this.timer = new ThreadedCountDownTimer((duration-1) * 1000, COUNTDOWN_INTERVAL) {
             @Override
             public void onTick() {
-                ((JIITActivity) contextActivity).decreaseTotalTime();
+                //((JIITActivity) contextActivity).decreaseTotalTime();
                 Log.i("WorkoutTask", "Onclick captured!");
             }
 
             @Override
             public void onFinish() {
                 if (next != null) {
-                    ((JIITActivity) contextActivity).decreaseTotalTime();
+                    //((JIITActivity) contextActivity).decreaseTotalTime();
                     next.start();
                 } else {
                     textViewToUpdate.setText("FINISH!");
-                    ((JIITActivity) contextActivity).toggleTimerMode();
+                    //((JIITActivity) contextActivity).toggleTimerMode();
                 }
                 Log.i("WorkoutTask", "OnFinish captured!");
             }
