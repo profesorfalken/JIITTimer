@@ -7,7 +7,16 @@
 
     <fragment
         android:id="@+id/workoutSettingsFragment"
-        android:name="com.profesorfalken.jiittimer.gui.WorkoutTimerSettingsFragment"
+        android:name="com.profesorfalken.jiittimer.gui.WorkoutSettingsFragment"
         android:label="workout_timer_settings"
-        tools:layout="@layout/workout_timer_settings" />
+        tools:layout="@layout/workout_settings" >
+        <action
+            android:id="@+id/action_workoutSettingsFragment_to_workoutTimerFragment"
+            app:destination="@id/workoutTimerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutTimerFragment"
+        android:name="com.profesorfalken.jiittimer.gui.WorkoutTimerFragment"
+        android:label="workout_timer"
+        tools:layout="@layout/workout_timer" />
 </navigation>

@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="fab_margin">8dp</dimen>
+    <dimen name="big_margin">16dp</dimen>
+    <dimen name="normal_margin">8dp</dimen>
+    <dimen name="setting_edit_width">50dp</dimen>
+    <dimen name="settings_text_size">16sp</dimen>
+    <dimen name="save_as_button_text_size">12sp</dimen>
+    <dimen name="program_spinner_width">120dp</dimen>
+    <dimen name="program_spinner_height">40dp</dimen>
+    <dimen name="button_default_height">80dp</dimen>
+</resources>

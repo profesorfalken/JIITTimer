@@ -38,6 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import static android.text.format.DateUtils.formatElapsedTime;
+
 public class JIITActivity extends AppCompatActivity {
 
     private static final String TAG = JIITActivity.class.getSimpleName();
@@ -48,4 +50,5 @@ public class JIITActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_jiit);
     }
+
 }

@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 import com.profesorfalken.jiittimer.R;
 
-public class TimerScoreFragment extends Fragment {
+public class WorkoutTimerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.timer_action_score, container, false);
+        return inflater.inflate(R.layout.workout_timer, container, false);
     }
 }

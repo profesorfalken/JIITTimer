@@ -1,21 +1,12 @@
 package com.profesorfalken.jiittimer.util;
 
+import android.text.format.DateUtils;
 import android.util.Log;
 
 public class JiitTimeUtils {
+
     public static String millisToFormattedTime(long millis) {
-        //long roundedMillis = (millis + 999) / 1000 * 1000;
-
-        long seconds = millis / 1000;
-
-        Log.i("JiitTimeUtils", "rounded: " + seconds);
-
-        String formatted =  String.format("%02d:%02d",
-                seconds / 60, seconds % 60);
-
-        Log.i("JiitTimeUtils", "formatted: " + formatted);
-
-        return formatted;
+        return DateUtils.formatElapsedTime(millis / 1000);
     }
 
     public static int formattedTimeToSeconds(String formattedTime) {

@@ -7,12 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.profesorfalken.jiittimer.R;
+import com.profesorfalken.jiittimer.databinding.WorkoutSettingsBinding;
 
-public class WorkoutTimerSettingsFragment extends Fragment {
+public class WorkoutSettingsFragment extends Fragment {
+    private WorkoutSettingsBinding binding = null;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.workout_timer_settings, container, false);
+        this.binding = WorkoutSettingsBinding.inflate(inflater, container, false);
+
+        return binding.getRoot();
     }
 }

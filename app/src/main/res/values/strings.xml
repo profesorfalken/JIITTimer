@@ -14,5 +14,6 @@
     <string name="default_start_cycles">0</string>
     <string name="plus_symbol">+</string>
     <string name="minus_symbol">-</string>
+    <string name="save_as_new">Save As New...</string>
 
 </resources>
