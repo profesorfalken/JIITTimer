@@ -3,8 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="choose_your_program">Choose your Program:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="work_time">Work Time:</string>
     <string name="rest_time">Rest Time:</string>
     <string name="cycles">Cycles:</string>
@@ -15,5 +13,10 @@
     <string name="plus_symbol">+</string>
     <string name="minus_symbol">-</string>
     <string name="save_as_new">Save As New...</string>
+
+    <string name="tag_workout_time_field" translatable="false">WORKOUT_TIME</string>
+    <string name="tag_rest_time_field" translatable="false">REST_TIME</string>
+    <string name="tag_cooldown_time_field" translatable="false">COOLDOWN_TIME</string>
+    <string name="tag_cycles_field" translatable="false">CYCLES</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.media.MediaPlayer;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.profesorfalken.jiittimer.JIITActivity;
 import com.profesorfalken.jiittimer.R;
 
 public class WorkoutTask {

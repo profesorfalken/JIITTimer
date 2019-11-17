@@ -1,4 +1,4 @@
-package com.profesorfalken.jiittimer.dialog;
+package com.profesorfalken.jiittimer.gui.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.EditText;
-
-import com.profesorfalken.jiittimer.JIITActivity;
 
 public class AddWorkoutDialog extends DialogFragment {
     @Override
