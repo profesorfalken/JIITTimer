@@ -51,15 +51,15 @@ public class WorkoutSettingsFragment extends Fragment {
             }
         });
         this.binding.cyclesPlusButton.setOnLongClickListener(getLongClickListener());
-        this.binding.cyclesPlusButton.setOnTouchListener(getOnTouchLister());
+        this.binding.cyclesPlusButton.setOnTouchListener(getOnTouchListener());
         this.binding.cyclesLessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewModel.decreaseCycles();
             }
         });
-        this.binding.cyclesLessButton.setOnLongClickListener(getLongClickListener());
-        this.binding.cyclesLessButton.setOnTouchListener(getOnTouchLister());
+        this.binding.cyclesLessButton.setOnLongClickListener(getLongClickListener(true));
+        this.binding.cyclesLessButton.setOnTouchListener(getOnTouchListener());
 
 
         this.binding.workTimePlusButton.setOnClickListener(new View.OnClickListener() {
@@ -69,15 +69,15 @@ public class WorkoutSettingsFragment extends Fragment {
             }
         });
         this.binding.workTimePlusButton.setOnLongClickListener(getLongClickListener());
-        this.binding.workTimePlusButton.setOnTouchListener(getOnTouchLister());
+        this.binding.workTimePlusButton.setOnTouchListener(getOnTouchListener());
         this.binding.workTimeLessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewModel.decreaseWorkoutTime();
             }
         });
-        this.binding.workTimeLessButton.setOnLongClickListener(getLongClickListener());
-        this.binding.workTimeLessButton.setOnTouchListener(getOnTouchLister());
+        this.binding.workTimeLessButton.setOnLongClickListener(getLongClickListener(true));
+        this.binding.workTimeLessButton.setOnTouchListener(getOnTouchListener());
 
 
         this.binding.restTimePlusButton.setOnClickListener(new View.OnClickListener() {
@@ -87,15 +87,15 @@ public class WorkoutSettingsFragment extends Fragment {
             }
         });
         this.binding.restTimePlusButton.setOnLongClickListener(getLongClickListener());
-        this.binding.restTimePlusButton.setOnTouchListener(getOnTouchLister());
+        this.binding.restTimePlusButton.setOnTouchListener(getOnTouchListener());
         this.binding.restTimeLessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewModel.decreaseRestTime();
             }
         });
-        this.binding.restTimeLessButton.setOnLongClickListener(getLongClickListener());
-        this.binding.restTimeLessButton.setOnTouchListener(getOnTouchLister());
+        this.binding.restTimeLessButton.setOnLongClickListener(getLongClickListener(true));
+        this.binding.restTimeLessButton.setOnTouchListener(getOnTouchListener());
 
 
         this.binding.cooldownPlusButton.setOnClickListener(new View.OnClickListener() {
@@ -105,20 +105,20 @@ public class WorkoutSettingsFragment extends Fragment {
             }
         });
         this.binding.cooldownPlusButton.setOnLongClickListener(getLongClickListener());
-        this.binding.cooldownPlusButton.setOnTouchListener(getOnTouchLister());
+        this.binding.cooldownPlusButton.setOnTouchListener(getOnTouchListener());
         this.binding.cooldownLessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 viewModel.decreaseCooldownTime();
             }
         });
-        this.binding.cooldownLessButton.setOnLongClickListener(getLongClickListener());
-        this.binding.cooldownLessButton.setOnTouchListener(getOnTouchLister());
+        this.binding.cooldownLessButton.setOnLongClickListener(getLongClickListener(true));
+        this.binding.cooldownLessButton.setOnTouchListener(getOnTouchListener());
 
 
     }
 
-    private View.OnTouchListener getOnTouchLister() {
+    private View.OnTouchListener getOnTouchListener() {
         return new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 if ((event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)) {
@@ -130,10 +130,14 @@ public class WorkoutSettingsFragment extends Fragment {
     }
 
     private View.OnLongClickListener getLongClickListener() {
+        return getLongClickListener(false);
+    }
+
+    private View.OnLongClickListener getLongClickListener(final boolean decrementOnUpdate) {
         return
                 new View.OnLongClickListener() {
                     public boolean onLongClick(View view) {
-                        longClickUpdater.startLongClickUpdate(view.getTag().toString());
+                        longClickUpdater.startLongClickUpdate(view.getTag().toString(), decrementOnUpdate);
                         return true;
                     }
 

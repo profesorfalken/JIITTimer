@@ -32,11 +32,11 @@ public class LongClickUpdateManager {
         cooldownTimeTag = context.getResources().getString(R.string.tag_cooldown_time_field);
         cyclesTag = context.getResources().getString(R.string.tag_cycles_field);
     }
-
-    //FIXME: should autoDecrement when click on minus button!
-    public void startLongClickUpdate(String fieldTag) {
+    
+    public void startLongClickUpdate(String fieldTag, boolean decrementOnUpdate) {
         if (!autoIncrement && !autoDecrement) {
-            autoIncrement = true;
+            autoIncrement = !decrementOnUpdate;
+            autoDecrement = !autoIncrement;
             Log.d("LongClickUpdateManager", "Creating updater!!");
             LongClickUpdater updater = new LongClickUpdater(fieldTag);
             repeatUpdateHandler.post(updater);
@@ -44,7 +44,7 @@ public class LongClickUpdateManager {
     }
 
     public void stopLongClickUpdate() {
-        autoIncrement = false;
+        autoIncrement = autoDecrement = false;
     }
 
 
