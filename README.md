@@ -121,7 +121,7 @@ La suite unitaria cubre:
 
 Los tests instrumentados verifican que la pantalla de configuración aparece, que una sesión arranca y se detiene, y que se puede crear un programa desde la UI.
 
-CI: [`.github/workflows/android.yml`](.github/workflows/android.yml) compila, ejecuta tests unitarios, lint y sube el APK; un segundo job ejecuta los tests instrumentados en un emulador API 35.
+CI: [`.github/workflows/android.yml`](.github/workflows/android.yml) compila, ejecuta tests unitarios, lint y sube el APK. Los tests instrumentados se ejecutan en local con un emulador o dispositivo conectado.
 
 ## Estructura
 
