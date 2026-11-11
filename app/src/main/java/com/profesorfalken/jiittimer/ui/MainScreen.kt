@@ -9,12 +9,15 @@ import android.os.Build
 import android.view.WindowManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +26,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -40,6 +44,7 @@ import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material3.AlertDialog
@@ -49,13 +54,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -66,8 +69,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -80,6 +81,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
@@ -103,7 +105,6 @@ import com.profesorfalken.jiittimer.timer.IntervalType
 import com.profesorfalken.jiittimer.timer.TimerState
 import com.profesorfalken.jiittimer.timer.TimerStatus
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun JiitTimerAppScreen(viewModel: MainViewModel = viewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -130,29 +131,6 @@ fun JiitTimerAppScreen(viewModel: MainViewModel = viewModel()) {
     }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.app_name),
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
-                actions = {
-                    if (state.timer.status == TimerStatus.Idle) {
-                        IconButton(onClick = { showSettingsDialog = true }) {
-                            Icon(
-                                imageVector = Icons.Filled.Settings,
-                                contentDescription = stringResource(R.string.settings),
-                            )
-                        }
-                    }
-                },
-            )
-        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         Box(
@@ -169,6 +147,7 @@ fun JiitTimerAppScreen(viewModel: MainViewModel = viewModel()) {
                     onAddProgram = { showAddDialog = true },
                     onRenameProgram = { showRenameDialog = true },
                     onDeleteProgram = { showDeleteDialog = true },
+                    onSettings = { showSettingsDialog = true },
                     onStart = startWorkout,
                 )
                 else -> TimerScreen(
@@ -264,6 +243,7 @@ private fun SetupScreen(
     onAddProgram: () -> Unit,
     onRenameProgram: () -> Unit,
     onDeleteProgram: () -> Unit,
+    onSettings: () -> Unit,
     onStart: () -> Unit,
 ) {
     val program = state.selectedProgram ?: return
@@ -279,15 +259,18 @@ private fun SetupScreen(
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                ProgramSelector(
+                ProgramHeader(
                     program = program,
                     programs = state.programs,
                     onSelectProgram = onSelectProgram,
                     onAddProgram = onAddProgram,
                     onRenameProgram = onRenameProgram,
                     onDeleteProgram = onDeleteProgram,
+                    onSettings = onSettings,
                     canDelete = state.programs.size > 1,
                 )
+
+                WorkoutSettingsHeader()
 
             val cards: @Composable (Modifier) -> Unit = { modifier ->
                 Column(
@@ -398,95 +381,181 @@ private fun SetupScreen(
 }
 
 @Composable
-private fun ProgramSelector(
+private fun ProgramHeader(
     program: WorkoutProgram,
     programs: List<WorkoutProgram>,
     onSelectProgram: (String) -> Unit,
     onAddProgram: () -> Unit,
     onRenameProgram: () -> Unit,
     onDeleteProgram: () -> Unit,
+    onSettings: () -> Unit,
     canDelete: Boolean,
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val colors = MaterialTheme.colorScheme
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f),
-        ),
+        shape = RoundedCornerShape(28.dp),
+        colors = CardDefaults.cardColors(containerColor = colors.primary),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, top = 10.dp, end = 8.dp, bottom = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            modifier = Modifier.padding(start = 20.dp, top = 14.dp, end = 12.dp, bottom = 8.dp),
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = stringResource(R.string.program),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Box {
-                    TextButton(onClick = { expanded = true }) {
-                        Text(
-                            text = program.name,
-                            style = MaterialTheme.typography.titleLarge,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f, fill = false),
+            Text(
+                text = stringResource(R.string.active_program).uppercase(),
+                style = MaterialTheme.typography.labelLarge,
+                color = colors.onPrimary.copy(alpha = 0.82f),
+            )
+            Spacer(Modifier.height(2.dp))
+
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { expanded = true }
+                        .padding(vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = program.name,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = colors.onPrimary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f),
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.ArrowDropDown,
+                        contentDescription = stringResource(R.string.choose_program),
+                        tint = colors.onPrimary,
+                        modifier = Modifier.size(28.dp),
+                    )
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                ) {
+                    programs.forEach { candidate ->
+                        DropdownMenuItem(
+                            text = { Text(candidate.name) },
+                            onClick = {
+                                onSelectProgram(candidate.id)
+                                expanded = false
+                            },
+                            leadingIcon = {
+                                if (candidate.id == program.id) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = null,
+                                    )
+                                }
+                            },
                         )
-                        Icon(
-                            imageVector = Icons.Filled.ArrowDropDown,
-                            contentDescription = stringResource(R.string.choose_program),
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                    ) {
-                        programs.forEach { candidate ->
-                            DropdownMenuItem(
-                                text = { Text(candidate.name) },
-                                onClick = {
-                                    onSelectProgram(candidate.id)
-                                    expanded = false
-                                },
-                                leadingIcon = {
-                                    if (candidate.id == program.id) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Check,
-                                            contentDescription = null,
-                                        )
-                                    }
-                                },
-                            )
-                        }
                     }
                 }
             }
 
-            IconButton(
-                onClick = onAddProgram,
-                modifier = Modifier.testTag("add_program"),
+            Spacer(Modifier.height(4.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
+                Text(
+                    text = stringResource(R.string.manage_programs),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = colors.onPrimary.copy(alpha = 0.82f),
+                    modifier = Modifier.weight(1f),
+                )
+                HeaderActionButton(
+                    icon = Icons.Filled.Settings,
+                    contentDescription = stringResource(R.string.settings),
+                    onClick = onSettings,
+                )
+                HeaderActionButton(
+                    icon = Icons.Filled.Add,
                     contentDescription = stringResource(R.string.add_program),
+                    modifier = Modifier.testTag("add_program"),
+                    onClick = onAddProgram,
                 )
-            }
-            IconButton(onClick = onRenameProgram) {
-                Icon(
-                    imageVector = Icons.Filled.Edit,
+                HeaderActionButton(
+                    icon = Icons.Filled.Edit,
                     contentDescription = stringResource(R.string.rename_program),
+                    onClick = onRenameProgram,
                 )
-            }
-            IconButton(onClick = onDeleteProgram, enabled = canDelete) {
-                Icon(
-                    imageVector = Icons.Filled.Delete,
+                HeaderActionButton(
+                    icon = Icons.Filled.Delete,
                     contentDescription = stringResource(R.string.delete_program),
+                    enabled = canDelete,
+                    onClick = onDeleteProgram,
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun HeaderActionButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    val colors = MaterialTheme.colorScheme
+    IconButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier.size(44.dp),
+        colors = IconButtonDefaults.iconButtonColors(
+            contentColor = colors.onPrimary,
+            disabledContentColor = colors.onPrimary.copy(alpha = 0.32f),
+        ),
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(22.dp),
+        )
+    }
+}
+
+@Composable
+private fun WorkoutSettingsHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 4.dp, top = 2.dp, end = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Tune,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(9.dp)
+                    .size(20.dp),
+            )
+        }
+        Spacer(Modifier.width(12.dp))
+        Column {
+            Text(
+                text = stringResource(R.string.workout_settings),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
+            Text(
+                text = stringResource(R.string.workout_settings_description),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
@@ -834,12 +903,8 @@ private fun TimerDisplay(
             )
         }
         Spacer(Modifier.height(12.dp))
-        LinearProgressIndicator(
-            progress = { state.intervalProgress },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(10.dp)
-                .clip(CircleShape),
+        TimerProgressBar(
+            progress = state.intervalProgress,
             color = accent,
             trackColor = accent.copy(alpha = 0.16f),
         )
@@ -874,6 +939,29 @@ private fun TimerDisplay(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
+private fun TimerProgressBar(
+    progress: Float,
+    color: Color,
+    trackColor: Color,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(10.dp)
+            .clip(CircleShape)
+            .background(trackColor),
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(progress.coerceIn(0f, 1f))
+                .fillMaxHeight()
+                .clip(CircleShape)
+                .background(color),
         )
     }
 }

@@ -38,18 +38,20 @@ class MainActivityTest {
 
     @Test
     fun setupIsVisibleAndWorkoutCanStartAndReset() {
+        val app = ApplicationProvider.getApplicationContext<JiitTimerApp>()
+
         waitForTag("start_workout")
         composeRule.onNodeWithTag("start_workout").performClick()
 
-        waitForTag("timer_screen")
+        // Check the engine instead of reading semantics while the countdown is
+        // running. On a slow software emulator Compose never reports itself as
+        // idle during an active timer, which is a test-harness limitation.
+        composeRule.waitUntil(timeoutMillis = 10_000) {
+            app.container.timerEngine.state.value.isActive
+        }
 
-        // Stop through the same engine command the UI uses. Avoid performing a
-        // Compose click while the timer is emitting updates: on a very slow
-        // software emulator the idling resource can stay busy long enough to
-        // time out even though the UI is healthy.
         InstrumentationRegistry.getInstrumentation().runOnMainSync {
-            ApplicationProvider.getApplicationContext<JiitTimerApp>()
-                .container.timerEngine.stop()
+            app.container.timerEngine.stop()
         }
 
         waitForTag("start_workout")

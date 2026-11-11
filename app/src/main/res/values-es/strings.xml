@@ -2,7 +2,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">JIIT Timer</string>
 
-    <string name="program">Programa</string>
+    <string name="active_program">Programa activo</string>
+    <string name="manage_programs">Gestionar</string>
+    <string name="workout_settings">Configuración del entrenamiento</string>
+    <string name="workout_settings_description">Preparación, intervalos, rondas y enfriamiento</string>
     <string name="choose_program">Elegir programa</string>
     <string name="add_program">Añadir programa</string>
     <string name="rename_program">Renombrar programa</string>
