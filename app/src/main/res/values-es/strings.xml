@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">JIIT Timer</string>
+
+    <string name="program">Programa</string>
+    <string name="choose_program">Elegir programa</string>
+    <string name="add_program">Añadir programa</string>
+    <string name="rename_program">Renombrar programa</string>
+    <string name="delete_program">Eliminar programa</string>
+    <string name="delete_program_confirmation">¿Eliminar %1$s? Esta acción no se puede deshacer.</string>
+    <string name="program_name_label">Nombre del programa</string>
+    <string name="program_name_required">Introduce un nombre.</string>
+    <string name="program_name_duplicate">Ya existe un programa con ese nombre.</string>
+    <string name="cannot_delete_last_program">Debe quedar al menos un programa.</string>
+
+    <string name="prepare">Preparación</string>
+    <string name="work">Trabajo</string>
+    <string name="rest">Descanso</string>
+    <string name="cycles">Rondas</string>
+    <string name="cool_down">Enfriamiento</string>
+    <string name="total_session">Sesión total</string>
+    <string name="session_breakdown" tools:ignore="PluralsCandidate">%4$d s de preparación · %1$d rondas × (%2$d s de trabajo + %3$d s de descanso) · %5$d s de enfriamiento</string>
+    <string name="start_workout">Empezar entrenamiento</string>
+    <string name="local_data_note">Los entrenamientos y los ajustes se guardan solo en este dispositivo.</string>
+
+    <string name="settings">Ajustes</string>
+    <string name="settings_description">Avisos durante el entrenamiento</string>
+    <string name="sound">Sonido</string>
+    <string name="vibration">Vibración</string>
+    <string name="close">Cerrar</string>
+
+    <string name="create">Crear</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Eliminar</string>
+    <string name="done">Listo</string>
+    <string name="repeat_workout">Repetir entrenamiento</string>
+
+    <string name="interval_prepare">Preparados</string>
+    <string name="interval_work">Trabajo</string>
+    <string name="interval_rest">Descanso</string>
+    <string name="interval_cooldown">Enfriamiento</string>
+    <string name="round_progress">Ronda %1$d de %2$d</string>
+    <string name="total_remaining">Quedan %1$s en total</string>
+    <string name="next_up">Siguiente: %1$s · %2$s</string>
+    <string name="last_interval">Último intervalo</string>
+    <string name="timer_running">En marcha</string>
+    <string name="work_in_progress">Intervalo de trabajo</string>
+    <string name="paused">En pausa</string>
+    <string name="paused_hint">El temporizador está en pausa y continuará exactamente donde se detuvo.</string>
+    <string name="pause">Pausa</string>
+    <string name="resume">Continuar</string>
+    <string name="skip">Saltar</string>
+    <string name="stop">Detener</string>
+    <string name="stop_workout_title">¿Detener el entrenamiento?</string>
+    <string name="stop_workout_message">Se perderá la sesión actual.</string>
+    <string name="keep_going">Seguir</string>
+    <string name="workout_complete">Entrenamiento completado</string>
+    <string name="total_duration">Duración total</string>
+    <plurals name="timer_remaining_seconds">
+        <item quantity="one">Queda %1$d segundo</item>
+        <item quantity="many">Quedan %1$d segundos</item>
+        <item quantity="other">Quedan %1$d segundos</item>
+    </plurals>
+    <string name="increase_value">Aumentar %1$s</string>
+    <string name="decrease_value">Reducir %1$s</string>
+
+    <string name="notification_channel_name">Temporizador de entrenamiento</string>
+    <string name="notification_channel_description">Controles permanentes mientras se ejecuta un entrenamiento.</string>
+    <string name="notification_prepare">Preparados</string>
+    <string name="notification_work">Trabajo · Ronda %1$d/%2$d</string>
+    <string name="notification_rest">Descanso · Ronda %1$d/%2$d</string>
+    <string name="notification_cooldown">Enfriamiento</string>
+    <string name="notification_text">%1$s · quedan %2$s</string>
+    <string name="action_pause">Pausa</string>
+    <string name="action_resume">Continuar</string>
+    <string name="action_skip">Saltar</string>
+    <string name="action_stop">Detener</string>
+
+    <string name="service_start_failed">No se pudo iniciar el temporizador en segundo plano. Mantén la app abierta.</string>
+</resources>

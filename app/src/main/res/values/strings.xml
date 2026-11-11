@@ -1,8 +1,80 @@
-<resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">JIIT Timer</string>
-    <string name="action_settings">Settings</string>
-    <string name="choose_your_program">Choose your Program:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="program">Program</string>
+    <string name="choose_program">Choose program</string>
+    <string name="add_program">Add program</string>
+    <string name="rename_program">Rename program</string>
+    <string name="delete_program">Delete program</string>
+    <string name="delete_program_confirmation">Delete %1$s? This cannot be undone.</string>
+    <string name="program_name_label">Program name</string>
+    <string name="program_name_required">Enter a name.</string>
+    <string name="program_name_duplicate">A program with that name already exists.</string>
+    <string name="cannot_delete_last_program">Keep at least one program.</string>
+
+    <string name="prepare">Prepare</string>
+    <string name="work">Work</string>
+    <string name="rest">Rest</string>
+    <string name="cycles">Cycles</string>
+    <string name="cool_down">Cool down</string>
+    <string name="total_session">Total session</string>
+    <string name="session_breakdown" tools:ignore="PluralsCandidate">%4$d s prepare · %1$d rounds × (%2$d s work + %3$d s rest) · %5$d s cool down</string>
+    <string name="start_workout">Start workout</string>
+    <string name="local_data_note">Workouts and settings stay on this device.</string>
+
+    <string name="settings">Settings</string>
+    <string name="settings_description">Workout cues</string>
+    <string name="sound">Sound</string>
+    <string name="vibration">Vibration</string>
+    <string name="close">Close</string>
+
+    <string name="create">Create</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="done">Done</string>
+    <string name="repeat_workout">Repeat workout</string>
+
+    <string name="interval_prepare">Get ready</string>
+    <string name="interval_work">Work</string>
+    <string name="interval_rest">Rest</string>
+    <string name="interval_cooldown">Cool down</string>
+    <string name="round_progress">Round %1$d of %2$d</string>
+    <string name="total_remaining">Total %1$s left</string>
+    <string name="next_up">Next: %1$s · %2$s</string>
+    <string name="last_interval">Last interval</string>
+    <string name="timer_running">Running</string>
+    <string name="work_in_progress">Work interval</string>
+    <string name="paused">Paused</string>
+    <string name="paused_hint">The timer is paused and will resume exactly where it stopped.</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
+    <string name="skip">Skip</string>
+    <string name="stop">Stop</string>
+    <string name="stop_workout_title">Stop workout?</string>
+    <string name="stop_workout_message">The current session will be lost.</string>
+    <string name="keep_going">Keep going</string>
+    <string name="workout_complete">Workout complete</string>
+    <string name="total_duration">Total duration</string>
+    <plurals name="timer_remaining_seconds">
+        <item quantity="one">%1$d second remaining</item>
+        <item quantity="other">%1$d seconds remaining</item>
+    </plurals>
+    <string name="increase_value">Increase %1$s</string>
+    <string name="decrease_value">Decrease %1$s</string>
+
+    <string name="notification_channel_name">Workout timer</string>
+    <string name="notification_channel_description">Persistent controls while a workout is running.</string>
+    <string name="notification_prepare">Get ready</string>
+    <string name="notification_work">Work · Round %1$d/%2$d</string>
+    <string name="notification_rest">Rest · Round %1$d/%2$d</string>
+    <string name="notification_cooldown">Cool down</string>
+    <string name="notification_text">%1$s · %2$s left</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_resume">Resume</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_stop">Stop</string>
+
+    <string name="service_start_failed">Could not start the background timer. Keep the app open.</string>
 </resources>
