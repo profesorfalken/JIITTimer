@@ -1,138 +1,139 @@
 # JIIT Timer
 
-Temporizador HIIT para Android, reescrito desde el proyecto Java de 2018 a un stack moderno de Kotlin y Jetpack Compose.
+A HIIT timer for Android, rewritten from the 2018 Java project to a modern Kotlin and Jetpack Compose stack.
 
-La app permite configurar programas de entrenamiento (preparación, trabajo, descanso, rondas y enfriamiento), guardarlos, iniciar sesiones con pausa y salto de intervalo, y mantener el temporizador vivo en segundo plano con notificación y controles.
+The app lets you configure workout programs (prepare, work, rest, rounds and cool down), save them, run sessions with pause and skip controls, and keep the timer alive in the background with a persistent notification and actions.
 
-| Configuración | Sesión en pausa |
+| Setup | Workout paused |
 |---|---|
-| ![Pantalla de configuración](docs/setup.png) | ![Temporizador en pausa](docs/timer-paused.png) |
+| ![Setup screen](docs/setup.png) | ![Paused workout](docs/timer-paused.png) |
 
-## Funcionalidad
+## Features
 
-- Programas reutilizables con nombre único: crear, renombrar, eliminar y cambiar de programa.
-- Tiempos configurables con límites seguros: preparación, trabajo, descanso, rondas y enfriamiento.
-- Descanso solo entre rondas, nunca después de la última.
-- Total de sesión calculado en tiempo real.
-- Motor de tiempo basado en `SystemClock.elapsedRealtime()`: sin deriva por ticks acumulados y con recuperación si el hilo principal se retrasa.
-- Pausa, reanudar, saltar intervalo, detener y repetir el entrenamiento.
-- Pantalla de finalización con duración total real.
-- Servicio en primer plano con notificación persistente y acciones (pausa, continuar, saltar, detener).
-- Wake lock parcial durante la sesión y `FLAG_KEEP_SCREEN_ON` mientras la UI está visible.
-- Avisos sonoros con `SoundPool`, foco de audio temporal y patrones de vibración distintos para trabajo, descanso y final.
-- Ajustes de sonido y vibración persistidos.
-- Tema claro/oscuro de Material 3, diseño adaptativo para vertical, horizontal y pantallas anchas.
-- Textos en inglés y español, contenido accesible y etiquetas de test.
-- Migración automática de los programas del formato antiguo `SharedPreferences`/JSON.
-- Persistencia con DataStore y JSON versionado; los datos corruptos se recuperan con valores por defecto en lugar de romper el arranque.
+- Reusable programs with unique names: create, rename, delete and switch programs.
+- Configurable timings with safe limits: prepare, work, rest, rounds and cool down.
+- Rest is scheduled only between rounds, never after the last one.
+- Session total calculated in real time.
+- Timer engine based on `SystemClock.elapsedRealtime()`: no drift from accumulated ticks, and catch-up when the main thread is delayed.
+- Pause, resume, skip interval, stop and repeat a workout.
+- Completion screen with the actual total duration.
+- Foreground service with a persistent notification and actions (pause, resume, skip, stop).
+- Partial wake lock during a session and `FLAG_KEEP_SCREEN_ON` while the UI is visible.
+- Sound cues through `SoundPool`, transient audio focus, and distinct vibration patterns for work, rest and finish.
+- Persisted sound and vibration settings.
+- Material 3 light/dark theme and responsive layouts for portrait, landscape and wide screens.
+- English and Spanish UI, accessible content descriptions and stable test tags.
+- Automatic migration of programs from the old `SharedPreferences`/JSON format.
+- DataStore persistence with versioned JSON; corrupt data falls back to defaults instead of breaking startup.
 
 ## Stack
 
-| Componente | Versión |
+| Component | Version |
 |---|---|
 | Kotlin | 2.2.21 |
 | Android Gradle Plugin | 8.13.2 |
 | Gradle | 8.13 |
-| JDK | 17 o 21 (probado con 21) |
+| JDK | 17 or 21 (tested with 21) |
 | compileSdk / targetSdk | 36 |
 | minSdk | 24 |
 | Jetpack Compose | BOM 2025.10.01, Material 3 |
-| Persistencia | DataStore Preferences + kotlinx.serialization |
-| Concurrencia | Coroutines + StateFlow |
+| Persistence | DataStore Preferences + kotlinx.serialization |
+| Concurrency | Coroutines + StateFlow |
 | Tests | JUnit4, Truth, kotlinx-coroutines-test, Compose UI Test |
 | CI | GitHub Actions |
 
-## Arquitectura
+## Architecture
 
 ```text
 MainActivity
   └── JiitTimerAppScreen (Compose)
         └── MainViewModel
-              ├── ProgramRepository ── DataStore (programas + ajustes)
+              ├── ProgramRepository ── DataStore (programs + settings)
               └── TimerEngine ── StateFlow<TimerState>
                     ├── WorkoutTimeline (prepare → work → rest → … → cooldown)
-                    ├── WorkoutCuePlayer (SoundPool + vibración)
-                    └── WorkoutTimerService (foreground service + notificación + wake lock)
+                    ├── WorkoutCuePlayer (SoundPool + vibration)
+                    └── WorkoutTimerService (foreground service + notification + wake lock)
 ```
 
-Puntos clave:
+Key points:
 
-- `TimerEngine` es código Kotlin puro, sin dependencias de Android, y se prueba con un reloj virtual. Deriva todo del tiempo transcurrido absoluto, no de sumar ticks.
-- La sesión vive en el proceso de la aplicación, no en la Activity. Girar la pantalla o cerrar la UI no detiene el entrenamiento.
-- `WorkoutTimerService` solo promueve el proceso a primer plano, publica la notificación y mantiene la CPU despierta. Las acciones de la notificación envían comandos al motor.
-- `ProgramRepository` es la única fuente de verdad de los programas. Cada cambio se refleja de inmediato en memoria y se serializa con un escritor único.
-- `ProgramsCodec` valida y normaliza todo lo leído. Si el JSON está corrupto, el repositorio intenta el formato antiguo y, si falla, arranca con el programa por defecto. La app ya no puede quedar inutilizable por un campo vacío.
+- `TimerEngine` is pure Kotlin with no Android dependencies and is tested with a virtual clock. It derives everything from absolute elapsed time instead of accumulating ticks.
+- The session lives in the application process, not in the Activity. Rotating the screen or closing the UI does not stop the workout.
+- `WorkoutTimerService` only promotes the process to the foreground, publishes the notification and keeps the CPU awake. Notification actions send commands to the engine.
+- `ProgramRepository` is the single source of truth for programs. Every change is reflected in memory immediately and serialized through a single writer.
+- `ProgramsCodec` validates and normalizes everything it reads. If the JSON is corrupt, the repository tries the legacy format and then falls back to the default program. A bad field can no longer make the app unusable.
+- The setup screen uses a compact primary-colored program header, a separate "Workout settings" section for the interval cards, and a fixed start button.
 
-### Migración desde 1.0
+### Migration from 1.0
 
-Al primer arranque, si DataStore está vacío, se lee el archivo antiguo:
+On first launch, if DataStore is empty, the old file is read:
 
 ```text
 SharedPreferences: com.profesorfalken.jiittimer.JiitWorkoutData
-Clave: WorkoutsData
-Formato: [{"Title":"Default","Data":"30|10|60|3"}]
+Key: WorkoutsData
+Format: [{"Title":"Default","Data":"30|10|60|3"}]
 ```
 
-Cada fila se valida por separado. Las filas malformadas se ignoran, los nombres duplicados se renombran y los valores fuera de rango se ajustan. Los programas migrados reciben 5 segundos de preparación, que el modelo antiguo no tenía.
+Each row is validated independently. Malformed rows are skipped, duplicate names are renamed, and out-of-range values are clamped. Migrated programs receive 5 seconds of prepare time, which the old model did not have.
 
-## Compilar
+## Build
 
-Requisitos:
+Requirements:
 
-- JDK 17 o 21.
-- Android SDK con `platforms;android-36` y `build-tools;36.0.0`.
-- `local.properties` con `sdk.dir=/ruta/al/Android/Sdk` (o `ANDROID_HOME` definido).
+- JDK 17 or 21.
+- Android SDK with `platforms;android-36` and `build-tools;36.0.0`.
+- `local.properties` with `sdk.dir=/path/to/Android/Sdk` (or `ANDROID_HOME` set).
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-APK de depuración:
+Debug APK:
 
 ```text
 app/build/outputs/apk/debug/app-debug.apk
 ```
 
-El `applicationId` de debug lleva el sufijo `.debug`, por lo que puede convivir con la versión de release. Para release:
+The debug `applicationId` has a `.debug` suffix, so it can coexist with the release build. For release:
 
 ```bash
 ./gradlew assembleRelease
 ```
 
-El build de release aplica R8 y `shrinkResources`. El APK resultante no está firmado; hay que configurar un keystore de release antes de distribuirlo.
+The release build applies R8 and `shrinkResources`. The resulting APK is unsigned; configure a release keystore before distributing it.
 
-## Tests y calidad
+## Tests and quality
 
 ```bash
-./gradlew testDebugUnitTest        # lógica de tiempo, timeline, codec, migración y formato
-./gradlew connectedDebugAndroidTest # flujo Compose en emulador/dispositivo
+./gradlew testDebugUnitTest         # time logic, timeline, codec, migration and formatting
+./gradlew connectedDebugAndroidTest # Compose flow on an emulator/device
 ./gradlew lintDebug                 # Android Lint
 ./gradlew assembleRelease           # R8 + shrinkResources
 ```
 
-La suite unitaria cubre:
+The unit suite covers:
 
-- Formato de tiempos y redondeo de cuenta atrás.
-- Construcción de la timeline y límites entre intervalos.
-- Conteo, pausa, reanudación, salto, parada y finalización del motor.
-- Cues de intervalo y cuenta atrás 3-2-1.
-- Código de la migración antigua, incluyendo datos corruptos y duplicados.
-- Serialización versionada, tolerancia a campos desconocidos y reparación de IDs.
+- Time formatting and countdown rounding.
+- Timeline construction and interval boundaries.
+- Engine counting, pause, resume, skip, stop and finish.
+- Interval cues and the 3-2-1 countdown.
+- Legacy migration code, including corrupt and duplicated data.
+- Versioned serialization, unknown-field tolerance and ID repair.
 
-Los tests instrumentados verifican que la pantalla de configuración aparece, que una sesión arranca y se detiene, y que se puede crear un programa desde la UI.
+The instrumented tests verify that the setup screen appears, that a workout starts and resets, that a new program can be created from the UI, and that a short workout reaches the completion screen.
 
-CI: [`.github/workflows/android.yml`](.github/workflows/android.yml) compila, ejecuta tests unitarios, lint y sube el APK. Los tests instrumentados se ejecutan en local con un emulador o dispositivo conectado.
+CI: [`.github/workflows/android.yml`](.github/workflows/android.yml) builds, runs the unit tests, runs lint and uploads the APK. Instrumented tests are run locally with an emulator or connected device.
 
-## Estructura
+## Project layout
 
 ```text
 app/src/main/java/com/profesorfalken/jiittimer/
 ├── MainActivity.kt
-├── JiitTimerApp.kt              # Application + AppContainer + canal de notificación
+├── JiitTimerApp.kt              # Application + AppContainer + notification channel
 ├── data/
-│   ├── ProgramRepository.kt     # fuente de verdad + DataStore
-│   ├── ProgramsCodec.kt         # JSON versionado y validación
-│   └── LegacyWorkoutParser.kt   # migración del formato 2018
+│   ├── ProgramRepository.kt     # source of truth + DataStore
+│   ├── ProgramsCodec.kt         # versioned JSON and validation
+│   └── LegacyWorkoutParser.kt   # migration from the 2018 format
 ├── model/
 │   ├── WorkoutProgram.kt
 │   ├── UserSettings.kt
@@ -152,30 +153,31 @@ app/src/main/java/com/profesorfalken/jiittimer/
     └── theme/
 ```
 
-## Permisos
+## Permissions
 
-- `POST_NOTIFICATIONS` (Android 13+): se solicita al iniciar el primer entrenamiento. Si se deniega, el servicio sigue funcionando pero la notificación puede no mostrarse en el cajón.
-- `FOREGROUND_SERVICE` y `FOREGROUND_SERVICE_SPECIAL_USE`: servicio en primer plano de tipo `specialUse` para un temporizador de entrenamiento.
-- `WAKE_LOCK`: mantener la CPU despierta durante la sesión.
-- `VIBRATE`: avisos hápticos.
+- `POST_NOTIFICATIONS` (Android 13+): requested when the first workout starts. If denied, the service still runs but the notification may not appear in the drawer.
+- `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_SPECIAL_USE`: a `specialUse` foreground service for a workout timer.
+- `WAKE_LOCK`: keeps the CPU awake during a session.
+- `VIBRATE`: haptic cues.
 
-La app no usa red, no pide permisos de ubicación ni almacenamiento y no envía datos a ningún servidor.
+The app does not use the network, does not request location or storage permissions, and does not send data to any server.
 
-## Verificación
+## Verification
 
-Estado verificado en esta modernización (11 de noviembre de 2026):
+State verified during this modernization (November 11, 2026):
 
-- `./gradlew assembleDebug`: correcto.
-- `./gradlew testDebugUnitTest`: 34 tests correctos (lógica de tiempo, timeline, motor, migración, códec, formato y smoke test Robolectric de la Activity).
-- `./gradlew lintDebug`: 0 errores y 0 avisos.
-- `./gradlew assembleRelease`: correcto con R8 y reducción de recursos.
-- Prueba manual en emulador API 28: arranque, inicio de sesión, pausa, salto de intervalo, reanudación, parada, notificación persistente y limpieza del servicio.
-- `./gradlew connectedDebugAndroidTest`: 3/3 tests correctos en emulador API 28 (detalle en [`docs/VERIFICATION.md`](docs/VERIFICATION.md)).
+- `./gradlew assembleDebug`: passed.
+- `./gradlew testDebugUnitTest`: 34 tests passed (time logic, timeline, engine, migration, codec, formatting and a Robolectric Activity smoke test).
+- `./gradlew lintDebug`: 0 errors and 0 warnings.
+- `./gradlew assembleRelease`: passed with R8 and resource shrinking.
+- Manual test on an API 28 emulator: launch, workout start, pause, skip interval, resume, stop, persistent notification and service cleanup.
+- `./gradlew connectedDebugAndroidTest`: 3/3 tests passed on an API 28 emulator (details in [`docs/VERIFICATION.md`](docs/VERIFICATION.md)).
+- GitHub Actions CI: build, unit tests and lint passed on both `master` and `modernize/kotlin-compose`.
 
-## Limitaciones conocidas
+## Known limitations
 
-- Una sesión activa no se restaura si el proceso muere por completo; el servicio en primer plano y el wake lock están pensados para evitarlo durante el uso normal.
-- El modelo actual permite un único trabajo y un único descanso por programa. No incluye secuencias de ejercicios distintos, historial ni estadísticas.
-- El APK de release generado por CI no está firmado.
-- Para publicar en Google Play habrá que declarar el uso del servicio en primer plano de tipo `specialUse` en la ficha de la app.
-- No hay licencia definida todavía en el repositorio; añádela antes de redistribuir.
+- An active session is not restored if the process is fully killed; the foreground service and wake lock are intended to prevent that during normal use.
+- The current model supports one work duration and one rest duration per program. It does not include exercise sequences, history or statistics.
+- The release APK produced by CI is not signed.
+- Publishing to Google Play requires declaring the `specialUse` foreground service in the app listing.
+- No license is defined in the repository yet; add one before redistributing.
