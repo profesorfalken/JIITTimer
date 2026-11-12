@@ -1,8 +1,10 @@
 # JIIT Timer
 
-A HIIT timer for Android, rewritten from the 2018 Java project to a modern Kotlin and Jetpack Compose stack.
+[![Android CI](https://github.com/profesorfalken/JIITTimer/actions/workflows/android.yml/badge.svg?branch=master)](https://github.com/profesorfalken/JIITTimer/actions/workflows/android.yml)
 
-The app lets you configure workout programs (prepare, work, rest, rounds and cool down), save them, run sessions with pause and skip controls, and keep the timer alive in the background with a persistent notification and actions.
+JIIT Timer is a simple, offline HIIT interval timer for Android. Configure a program, press start, and focus on the workout: the app keeps track of work, rest, rounds and cool down, with sound and vibration cues and a persistent notification.
+
+It is built with Kotlin and Jetpack Compose and works without an account, an internet connection, ads or tracking.
 
 | Setup | Workout paused |
 |---|---|
@@ -10,71 +12,34 @@ The app lets you configure workout programs (prepare, work, rest, rounds and coo
 
 ## Features
 
-- Reusable programs with unique names: create, rename, delete and switch programs.
-- Configurable timings with safe limits: prepare, work, rest, rounds and cool down.
-- Rest is scheduled only between rounds, never after the last one.
-- Session total calculated in real time.
-- Timer engine based on `SystemClock.elapsedRealtime()`: no drift from accumulated ticks, and catch-up when the main thread is delayed.
-- Pause, resume, skip interval, stop and repeat a workout.
-- Completion screen with the actual total duration.
-- Foreground service with a persistent notification and actions (pause, resume, skip, stop).
-- Partial wake lock during a session and `FLAG_KEEP_SCREEN_ON` while the UI is visible.
-- Sound cues through `SoundPool`, transient audio focus, and distinct vibration patterns for work, rest and finish.
-- Persisted sound and vibration settings.
-- Material 3 light/dark theme and responsive layouts for portrait, landscape and wide screens.
-- English and Spanish UI, accessible content descriptions and stable test tags.
-- Automatic migration of programs from the old `SharedPreferences`/JSON format.
-- DataStore persistence with versioned JSON; corrupt data falls back to defaults instead of breaking startup.
+- Create, rename, delete and switch reusable workout programs.
+- Configure prepare time, work time, rest time, rounds and cool down.
+- Rest between rounds, using the actual elapsed time for accurate countdowns.
+- Pause, resume, skip an interval, stop or repeat a workout.
+- Sound cues with audio focus and distinct vibration patterns for work, rest and finish.
+- Persistent notification with Pause, Resume, Skip and Stop actions.
+- Keeps running when the screen is off or the app is in the background.
+- Light and dark Material 3 themes, responsive layouts and English/Spanish UI.
+- All data stays on the device.
 
-## Stack
+## How it works
 
-| Component | Version |
-|---|---|
-| Kotlin | 2.2.21 |
-| Android Gradle Plugin | 8.13.2 |
-| Gradle | 8.13 |
-| JDK | 17 or 21 (tested with 21) |
-| compileSdk / targetSdk | 36 |
-| minSdk | 24 |
-| Jetpack Compose | BOM 2025.10.01, Material 3 |
-| Persistence | DataStore Preferences + kotlinx.serialization |
-| Concurrency | Coroutines + StateFlow |
-| Tests | JUnit4, Truth, kotlinx-coroutines-test, Compose UI Test |
-| CI | GitHub Actions |
+The UI is a single Jetpack Compose screen driven by a ViewModel. Programs and settings are stored locally with DataStore. A pure Kotlin timer engine derives the current interval and remaining time from `SystemClock.elapsedRealtime()`, so delayed ticks do not make the workout drift. When a session starts, a foreground service keeps the process alive, shows the notification, holds a partial wake lock and sends notification actions back to the timer engine.
 
-## Architecture
+The session lives in the application process rather than the Activity, so rotating the screen or leaving the UI does not reset the workout. The previous 2018 data format is migrated automatically on first launch.
 
-```text
-MainActivity
-  └── JiitTimerAppScreen (Compose)
-        └── MainViewModel
-              ├── ProgramRepository ── DataStore (programs + settings)
-              └── TimerEngine ── StateFlow<TimerState>
-                    ├── WorkoutTimeline (prepare → work → rest → … → cooldown)
-                    ├── WorkoutCuePlayer (SoundPool + vibration)
-                    └── WorkoutTimerService (foreground service + notification + wake lock)
+## Install
+
+For now, build and install the APK from source:
+
+```bash
+git clone https://github.com/profesorfalken/JIITTimer.git
+cd JIITTimer
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-Key points:
-
-- `TimerEngine` is pure Kotlin with no Android dependencies and is tested with a virtual clock. It derives everything from absolute elapsed time instead of accumulating ticks.
-- The session lives in the application process, not in the Activity. Rotating the screen or closing the UI does not stop the workout.
-- `WorkoutTimerService` only promotes the process to the foreground, publishes the notification and keeps the CPU awake. Notification actions send commands to the engine.
-- `ProgramRepository` is the single source of truth for programs. Every change is reflected in memory immediately and serialized through a single writer.
-- `ProgramsCodec` validates and normalizes everything it reads. If the JSON is corrupt, the repository tries the legacy format and then falls back to the default program. A bad field can no longer make the app unusable.
-- The setup screen uses a compact primary-colored program header, a separate "Workout settings" section for the interval cards, and a fixed start button.
-
-### Migration from 1.0
-
-On first launch, if DataStore is empty, the old file is read:
-
-```text
-SharedPreferences: com.profesorfalken.jiittimer.JiitWorkoutData
-Key: WorkoutsData
-Format: [{"Title":"Default","Data":"30|10|60|3"}]
-```
-
-Each row is validated independently. Malformed rows are skipped, duplicate names are renamed, and out-of-range values are clamped. Migrated programs receive 5 seconds of prepare time, which the old model did not have.
+The debug build uses the application ID `com.profesorfalken.jiittimer.debug`, so it can coexist with a release build. A Google Play release is planned.
 
 ## Build
 
@@ -82,102 +47,62 @@ Requirements:
 
 - JDK 17 or 21.
 - Android SDK with `platforms;android-36` and `build-tools;36.0.0`.
-- `local.properties` with `sdk.dir=/path/to/Android/Sdk` (or `ANDROID_HOME` set).
+- `local.properties` with `sdk.dir=/path/to/Android/Sdk`, or `ANDROID_HOME` set.
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-Debug APK:
+The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
 
-```text
-app/build/outputs/apk/debug/app-debug.apk
+For a release build, create `keystore.properties` from `keystore.properties.example` and point it at your upload keystore:
+
+```properties
+storeFile=/absolute/path/to/upload-keystore.jks
+storePassword=change-me
+keyAlias=upload
+keyPassword=change-me
 ```
 
-The debug `applicationId` has a `.debug` suffix, so it can coexist with the release build. For release:
+Then build an APK or an Android App Bundle:
 
 ```bash
 ./gradlew assembleRelease
+./gradlew bundleRelease
 ```
 
-The release build applies R8 and `shrinkResources`. The resulting APK is unsigned; configure a release keystore before distributing it.
-
-## Tests and quality
-
-```bash
-./gradlew testDebugUnitTest         # time logic, timeline, codec, migration and formatting
-./gradlew connectedDebugAndroidTest # Compose flow on an emulator/device
-./gradlew lintDebug                 # Android Lint
-./gradlew assembleRelease           # R8 + shrinkResources
-```
-
-The unit suite covers:
-
-- Time formatting and countdown rounding.
-- Timeline construction and interval boundaries.
-- Engine counting, pause, resume, skip, stop and finish.
-- Interval cues and the 3-2-1 countdown.
-- Legacy migration code, including corrupt and duplicated data.
-- Versioned serialization, unknown-field tolerance and ID repair.
-
-The instrumented tests verify that the setup screen appears, that a workout starts and resets, that a new program can be created from the UI, and that a short workout reaches the completion screen.
-
-CI: [`.github/workflows/android.yml`](.github/workflows/android.yml) builds, runs the unit tests, runs lint and uploads the APK. Instrumented tests are run locally with an emulator or connected device.
-
-## Project layout
+Outputs:
 
 ```text
-app/src/main/java/com/profesorfalken/jiittimer/
-├── MainActivity.kt
-├── JiitTimerApp.kt              # Application + AppContainer + notification channel
-├── data/
-│   ├── ProgramRepository.kt     # source of truth + DataStore
-│   ├── ProgramsCodec.kt         # versioned JSON and validation
-│   └── LegacyWorkoutParser.kt   # migration from the 2018 format
-├── model/
-│   ├── WorkoutProgram.kt
-│   ├── UserSettings.kt
-│   └── TimeFormat.kt
-├── timer/
-│   ├── TimerEngine.kt
-│   ├── TimerState.kt
-│   ├── WorkoutTimeline.kt
-│   └── WorkoutCuePlayer.kt
-├── audio/
-│   └── AndroidCuePlayer.kt
-├── service/
-│   └── WorkoutTimerService.kt
-└── ui/
-    ├── MainScreen.kt
-    ├── MainViewModel.kt
-    └── theme/
+app/build/outputs/apk/release/app-release.apk
+app/build/outputs/bundle/release/app-release.aab
 ```
 
-## Permissions
+`keystore.properties` and keystores are ignored by Git. Never commit them.
 
-- `POST_NOTIFICATIONS` (Android 13+): requested when the first workout starts. If denied, the service still runs but the notification may not appear in the drawer.
-- `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_SPECIAL_USE`: a `specialUse` foreground service for a workout timer.
-- `WAKE_LOCK`: keeps the CPU awake during a session.
-- `VIBRATE`: haptic cues.
+See [docs/PUBLISHING.md](docs/PUBLISHING.md) for the complete Google Play publishing steps.
 
-The app does not use the network, does not request location or storage permissions, and does not send data to any server.
+## Tests
 
-## Verification
+```bash
+./gradlew testDebugUnitTest
+./gradlew connectedDebugAndroidTest  # emulator or device required
+./gradlew lintDebug
+```
 
-State verified during this modernization (November 11, 2026):
+## Tech stack
 
-- `./gradlew assembleDebug`: passed.
-- `./gradlew testDebugUnitTest`: 34 tests passed (time logic, timeline, engine, migration, codec, formatting and a Robolectric Activity smoke test).
-- `./gradlew lintDebug`: 0 errors and 0 warnings.
-- `./gradlew assembleRelease`: passed with R8 and resource shrinking.
-- Manual test on an API 28 emulator: launch, workout start, pause, skip interval, resume, stop, persistent notification and service cleanup.
-- `./gradlew connectedDebugAndroidTest`: 3/3 tests passed on an API 28 emulator (details in [`docs/VERIFICATION.md`](docs/VERIFICATION.md)).
-- GitHub Actions CI: build, unit tests and lint passed on both `master` and `modernize/kotlin-compose`.
+- Kotlin 2.2.21, Jetpack Compose, Material 3
+- Android Gradle Plugin 8.13.2, Gradle 8.13
+- compileSdk/targetSdk 36, minSdk 24
+- DataStore Preferences and kotlinx.serialization
+- Coroutines and StateFlow
+- JUnit4, Truth, Robolectric and Compose UI Test
 
-## Known limitations
+## Privacy
 
-- An active session is not restored if the process is fully killed; the foreground service and wake lock are intended to prevent that during normal use.
-- The current model supports one work duration and one rest duration per program. It does not include exercise sequences, history or statistics.
-- The release APK produced by CI is not signed.
-- Publishing to Google Play requires declaring the `specialUse` foreground service in the app listing.
-- No license is defined in the repository yet; add one before redistributing.
+JIIT Timer does not use the network, does not request location or storage permissions, and does not collect or share personal data. See the [privacy policy](docs/privacy-policy.html) for the full statement.
+
+## License
+
+No license has been chosen for this project yet. Contact the author before reusing or redistributing the code.

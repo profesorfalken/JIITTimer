@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" viewBox="0 0 1024 500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C2410C"/>
+      <stop offset="1" stop-color="#8B2A06"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="500" fill="url(#bg)"/>
+  <circle cx="900" cy="70" r="180" fill="#FFFFFF" opacity="0.06"/>
+  <circle cx="80" cy="470" r="130" fill="#FFFFFF" opacity="0.05"/>
+  <g transform="translate(742 96) scale(10.5)" opacity="0.95">
+    <path fill="#FFFFFF" d="M15,1H9v2h6V1zM11,14h2V8h-2v6zM19.03,7.39l1.42,-1.42c-0.43,-0.51 -0.9,-0.99 -1.41,-1.41l-1.42,1.42C16.07,4.74 14.12,4 12,4c-4.97,0 -9,4.03 -9,9s4.02,9 9,9 9,-4.03 9,-9c0,-2.12 -0.74,-4.07 -1.97,-5.61zM12,20c-3.87,0 -7,-3.13 -7,-7s3.13,-7 7,-7 7,3.13 7,7 -3.13,7 -7,7z"/>
+  </g>
+  <text x="72" y="205" font-family="Liberation Sans, DejaVu Sans, sans-serif" font-size="86" font-weight="bold" fill="#FFFFFF">JIIT Timer</text>
+  <text x="76" y="272" font-family="Liberation Sans, DejaVu Sans, sans-serif" font-size="33" fill="#FFDBCB">Simple HIIT interval timer</text>
+  <text x="76" y="326" font-family="Liberation Sans, DejaVu Sans, sans-serif" font-size="23" fill="#FFDBCB">Work · Rest · Rounds · Cool down</text>
+</svg>
